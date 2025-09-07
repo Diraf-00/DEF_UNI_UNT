@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Lock, User, AlertCircle } from 'lucide-react';
+import { User } from '../../types';
+import { Lock, User as UserIcon, AlertCircle } from 'lucide-react';
 
 interface LoginProps {
-  onLogin: (userData: any) => void;
+  onLogin: (userData: User) => void;
 }
 
 export function Login({ onLogin }: LoginProps) {
@@ -65,7 +66,7 @@ export function Login({ onLogin }: LoginProps) {
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-gray-400" />
+                  <UserIcon className="h-5 w-5 text-gray-400" />
                 </div>
                 <input
                   id="email"

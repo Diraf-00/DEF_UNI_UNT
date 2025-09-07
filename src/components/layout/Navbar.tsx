@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import { User } from '../types';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, User, LogOut, Home, FileText, Download, PlusCircle, Search, BarChart3 } from 'lucide-react';
+import { Menu, X, User as UserIcon, LogOut, Home, FileText, Download, PlusCircle, Search, BarChart3 } from 'lucide-react';
 
 interface NavbarProps {
   isAuthenticated: boolean;
-  user: any;
+  user: User | null;
   onLogout: () => void;
 }
 
@@ -87,7 +88,7 @@ export function Navbar({ isAuthenticated, user, onLogout }: NavbarProps) {
                     to="/perfil"
                     className="flex items-center space-x-1 px-3 py-2 rounded-md text-blue-100 hover:bg-blue-800 hover:text-white transition-colors"
                   >
-                    <User className="w-4 h-4" />
+                    <UserIcon className="w-4 h-4" />
                     <span>{user?.nombre || 'Usuario'}</span>
                   </Link>
                   <button
@@ -163,7 +164,7 @@ export function Navbar({ isAuthenticated, user, onLogout }: NavbarProps) {
                   onClick={() => setIsMenuOpen(false)}
                   className="flex items-center space-x-2 px-3 py-2 rounded-md text-blue-100 hover:bg-blue-800 hover:text-white transition-colors"
                 >
-                  <User className="w-4 h-4" />
+                  <UserIcon className="w-4 h-4" />
                   <span>Perfil - {user?.nombre || 'Usuario'}</span>
                 </Link>
                 <button
