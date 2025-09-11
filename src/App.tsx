@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { User } from './types';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Home } from './components/public/Home';
 import { BaseLegal } from './components/public/BaseLegal';
@@ -16,18 +17,18 @@ import { Footer } from './components/layout/Footer';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     // Check if user is logged in (in real app, this would check token/session)
     const savedUser = localStorage.getItem('defensoriaUser');
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
+      setUser(JSON.parse(savedUser) as User);
       setIsAuthenticated(true);
     }
   }, []);
 
-  const handleLogin = (userData) => {
+  const handleLogin = (userData: User) => {
     setUser(userData);
     setIsAuthenticated(true);
     localStorage.setItem('defensoriaUser', JSON.stringify(userData));
