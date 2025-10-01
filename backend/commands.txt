@@ -1,0 +1,15 @@
+npm run start:dev
+
+# ORM para la base de datos
+npm install -g @nestjs/cli
+npx prisma init
+
+# Iniciar el contenedor
+docker-compose up -d
+# Verificar estado
+docker-compose ps
+# Detener
+docker-compose down
+
+# Primera migración
+npx prisma migrate dev --name init
