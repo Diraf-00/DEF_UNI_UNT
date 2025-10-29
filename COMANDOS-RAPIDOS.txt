@@ -1,0 +1,123 @@
+═══════════════════════════════════════════════════════════════
+   COMANDOS RÁPIDOS - DEFENSORÍA UNIVERSITARIA CON DOCKER
+═══════════════════════════════════════════════════════════════
+
+📋 REQUISITO PREVIO:
+   - Docker Desktop instalado y corriendo
+
+═══════════════════════════════════════════════════════════════
+🚀 INICIAR EL PROYECTO (PRIMERA VEZ)
+═══════════════════════════════════════════════════════════════
+
+1. Clonar y entrar al proyecto:
+   git clone <url-del-repo>
+   cd defensoria-universitaria/backend
+
+2. Crear archivo .env:
+   # Windows PowerShell:
+   copy .env.example .env
+   
+   # Linux/Mac:
+   cp .env.example .env
+
+3. Iniciar todo:
+   docker-compose up -d
+
+4. Verificar que esté corriendo:
+   docker-compose ps
+
+═══════════════════════════════════════════════════════════════
+🌐 URLS DE ACCESO
+═══════════════════════════════════════════════════════════════
+
+Frontend:    http://localhost:3000
+Backend API: http://localhost:4000
+Adminer:     http://localhost:8080
+
+Credenciales Adminer:
+   Sistema: PostgreSQL
+   Servidor: db
+   Usuario: user
+   Contraseña: password
+   Base de datos: defensoria_db
+
+═══════════════════════════════════════════════════════════════
+📝 COMANDOS DÍA A DÍA
+═══════════════════════════════════════════════════════════════
+
+Ver logs en tiempo real:
+   docker-compose logs -f
+
+Ver logs solo del backend:
+   docker-compose logs -f backend
+
+Detener todo:
+   docker-compose down
+
+Iniciar de nuevo:
+   docker-compose up -d
+
+Reiniciar backend:
+   docker-compose restart backend
+
+Reconstruir después de cambios:
+   docker-compose up -d --build
+
+═══════════════════════════════════════════════════════════════
+🔧 COMANDOS DE BASE DE DATOS
+═══════════════════════════════════════════════════════════════
+
+Ejecutar migraciones:
+   docker exec -it defensoria_backend npx prisma migrate deploy
+
+Crear nueva migración:
+   docker exec -it defensoria_backend npx prisma migrate dev --name nombre
+
+Abrir Prisma Studio (GUI para ver datos):
+   docker exec -it defensoria_backend npx prisma studio
+
+═══════════════════════════════════════════════════════════════
+🧹 LIMPIEZA Y RESET
+═══════════════════════════════════════════════════════════════
+
+Limpiar todo y empezar de cero:
+   docker-compose down -v
+   docker-compose up -d
+
+Limpiar caché de Docker:
+   docker system prune -a
+
+═══════════════════════════════════════════════════════════════
+❌ SOLUCIÓN DE PROBLEMAS
+═══════════════════════════════════════════════════════════════
+
+Error: Puerto ocupado
+   - Detén otros servicios o cambia el puerto en docker-compose.yml
+
+Error: Docker no responde
+   - Asegúrate de que Docker Desktop esté corriendo
+
+Backend no funciona
+   docker-compose logs backend
+   docker-compose up -d --build backend
+
+Resetear completamente:
+   docker-compose down -v
+   docker system prune -a
+   docker-compose up -d
+
+═══════════════════════════════════════════════════════════════
+✅ CHECKLIST RÁPIDO
+═══════════════════════════════════════════════════════════════
+
+[ ] Docker Desktop corriendo
+[ ] Navegado a: cd defensoria-universitaria/backend
+[ ] Ejecutado: copy .env.example .env
+[ ] Ejecutado: docker-compose up -d
+[ ] Verificado: docker-compose ps (todo "Up")
+[ ] Probado: http://localhost:3000 (frontend)
+[ ] Probado: http://localhost:4000 (backend)
+
+═══════════════════════════════════════════════════════════════
+
+Para más detalles, consulta GUIA-EQUIPO.md
