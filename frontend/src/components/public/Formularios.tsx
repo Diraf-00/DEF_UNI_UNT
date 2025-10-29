@@ -26,7 +26,9 @@ export function Formularios() {
       version: 'v1.3',
       fechaActualizacion: '2024-01-10',
       obligatorio: false,
-      categoria: 'proceso'
+      categoria: 'proceso',
+      tieneFormularioInteractivo: true,
+      rutaFormulario: '/formulario-anexo02'
     },
     {
       nombre: 'Formulario de Subsanación',
@@ -225,8 +227,8 @@ export function Formularios() {
               .map((formulario, index) => (
                 <div key={index} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                   <div className="flex items-center space-x-3 mb-4">
-                    <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                      <FileText className="w-5 h-5 text-green-600" />
+                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <FileText className="w-5 h-5 text-blue-600" />
                     </div>
                     <h3 className="font-semibold text-gray-900">
                       {formulario.nombre}
@@ -244,10 +246,19 @@ export function Formularios() {
                   
                   <button
                     onClick={() => handleFormularioClick(formulario)}
-                    className="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center space-x-2 text-sm"
+                    className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2 text-sm"
                   >
-                    <Download className="w-4 h-4" />
-                    <span>Descargar</span>
+                    {formulario.tieneFormularioInteractivo ? (
+                      <>
+                        <Edit className="w-4 h-4" />
+                        <span>Llenar Formulario</span>
+                      </>
+                    ) : (
+                      <>
+                        <Download className="w-4 h-4" />
+                        <span>Descargar</span>
+                      </>
+                    )}
                   </button>
                 </div>
               ))}

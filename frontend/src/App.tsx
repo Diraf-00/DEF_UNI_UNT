@@ -5,6 +5,7 @@ import { Home } from './components/public/Home';
 import { BaseLegal } from './components/public/BaseLegal';
 import { Formularios } from './components/public/Formularios';
 import { FormularioAnexo01 } from './components/public/FormularioAnexo01';
+import { FormularioAnexo02 } from './components/public/FormularioAnexo02';
 import { IngresoCaso } from './components/public/IngresoCaso';
 import { SeguimientoCaso } from './components/public/SeguimientoCaso';
 import { Dashboard } from './components/private/Dashboard';
@@ -57,6 +58,7 @@ function App() {
             <Route path="/base-legal" element={<BaseLegal />} />
             <Route path="/formularios" element={<Formularios />} />
             <Route path="/formulario-anexo01" element={<FormularioAnexo01 />} />
+            <Route path="/formulario-anexo02" element={<FormularioAnexo02 />} />
             <Route path="/ingreso-caso" element={<IngresoCaso />} />
             <Route path="/seguimiento" element={<SeguimientoCaso />} />
             <Route 
