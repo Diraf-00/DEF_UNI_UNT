@@ -1,0 +1,49 @@
+VISTA 4. PROCEDIMIENTO Y RECURSOS VISUALES
+
+Cómo se tramitan las denuncias, reclamos o consultas.
+
+🔷 Procedimiento (Art. 21–28)
+
+Presentación de la solicitud:
+
+Por escrito o medio virtual mediante formulario oficial.
+
+Incluye datos del denunciante, descripción de hechos, pretensión y pruebas.
+
+Registro:
+
+Se asigna un número de expediente y código anónimo (Art. 22).
+
+Evaluación de admisibilidad:
+
+Dentro de 5 días hábiles (Art. 23).
+
+Si no cumple requisitos, se solicita subsanación o se archiva.
+
+Investigación:
+
+Solicitud de información y descargos a las áreas involucradas.
+
+Plazo máximo: 30 días calendario (Art. 18).
+
+Conciliación:
+
+Se cita a las partes para lograr acuerdo.
+
+Si hay acuerdo, se levanta Acta de Mediación (Anexo 2).
+
+Recomendaciones:
+
+Si no hay acuerdo, se emiten recomendaciones (no vinculantes).
+
+Informe final:
+
+Incluye hechos, análisis, medidas y cumplimiento (Art. 28).
+
+Se entrega a las partes y al Rectorado.
+
+🗂️ Flujograma visual
+
+Un esquema en 7 pasos con íconos representando:
+
+Solicitud → Registro → Admisibilidad → Investigación → Conciliación → Recomendación → Informe Final

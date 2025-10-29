@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { User } from '../types';
-import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, User as UserIcon, LogOut, Home, FileText, Download, PlusCircle, Search, BarChart3 } from 'lucide-react';
+import { useState } from 'react';
+import { User } from '../../types';
+import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Menu, X, User as UserIcon, LogOut, Home, Shield, BookOpen, Clipboard, FilePlus, Megaphone, FileText, BarChart3 } from 'lucide-react';
+// Import SVG so it is bundled and can be referenced as a module (Vite will emit a URL)
+import logo from '../../../logo-unt.svg';
 
 interface NavbarProps {
   isAuthenticated: boolean;
@@ -11,14 +13,16 @@ interface NavbarProps {
 
 export function Navbar({ isAuthenticated, user, onLogout }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [hoveredPath, setHoveredPath] = useState<string | null>(null);
   const location = useLocation();
 
   const publicLinks = [
     { path: '/', label: 'Inicio', icon: Home },
-    { path: '/base-legal', label: 'Base Legal', icon: FileText },
-    { path: '/formularios', label: 'Formularios', icon: Download },
-    { path: '/ingreso-caso', label: 'Nuevo Caso', icon: PlusCircle },
-    { path: '/seguimiento', label: 'Seguimiento', icon: Search },
+    { path: '/funciones', label: 'Funciones', icon: Shield },
+    { path: '/base-legal', label: 'Documentos', icon: BookOpen },
+    { path: '/procedimiento', label: 'Procedimiento y Recursos', icon: Clipboard },
+    { path: '/ingreso-caso', label: 'Formulario de Atención', icon: FilePlus },
+    { path: '/noticias', label: 'Noticias y Difusión', icon: Megaphone },
   ];
 
   const privateLinks = [
@@ -30,114 +34,114 @@ export function Navbar({ isAuthenticated, user, onLogout }: NavbarProps) {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <nav className="bg-blue-900 text-white shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                <span className="text-blue-900 font-bold">DU</span>
+    <nav className="shadow-lg">
+      {/* Top: logo row (light background) */}
+      <div style={{ backgroundColor: '#F3F3F1' }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center h-16">
+            <Link to="/" className="flex items-center">
+              <img src={logo} alt="Logo UNT" className="w-12 h-12 object-contain" />
+              <div className="ml-3 leading-tight flex flex-col">
+                <span className="text-base font-semibold" style={{ color: '#132746' }}>Defensoría Universitaria UNT</span>
               </div>
-              <span className="text-xl font-semibold">Defensoría Universitaria</span>
             </Link>
           </div>
+        </div>
+      </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-4">
-            {!isAuthenticated ? (
-              <>
-                {publicLinks.map(({ path, label, icon: Icon }) => (
-                  <Link
-                    key={path}
-                    to={path}
-                    className={`flex items-center space-x-1 px-3 py-2 rounded-md transition-colors ${
-                      isActive(path)
-                        ? 'bg-blue-800 text-white'
-                        : 'text-blue-100 hover:bg-blue-800 hover:text-white'
-                    }`}
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span>{label}</span>
-                  </Link>
-                ))}
-                <Link
-                  to="/login"
-                  className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md transition-colors"
-                >
-                  Acceso Privado
-                </Link>
-              </>
-            ) : (
-              <>
-                {privateLinks.map(({ path, label, icon: Icon }) => (
-                  <Link
-                    key={path}
-                    to={path}
-                    className={`flex items-center space-x-1 px-3 py-2 rounded-md transition-colors ${
-                      isActive(path)
-                        ? 'bg-blue-800 text-white'
-                        : 'text-blue-100 hover:bg-blue-800 hover:text-white'
-                    }`}
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span>{label}</span>
-                  </Link>
-                ))}
-                <div className="flex items-center space-x-2">
-                  <Link
-                    to="/perfil"
-                    className="flex items-center space-x-1 px-3 py-2 rounded-md text-blue-100 hover:bg-blue-800 hover:text-white transition-colors"
-                  >
-                    <UserIcon className="w-4 h-4" />
-                    <span>{user?.nombre || 'Usuario'}</span>
-                  </Link>
-                  <button
-                    onClick={onLogout}
-                    className="flex items-center space-x-1 px-3 py-2 rounded-md text-blue-100 hover:bg-red-600 hover:text-white transition-colors"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    <span>Salir</span>
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
+      {/* Bottom: navigation row (dark background) */}
+      <div style={{ backgroundColor: '#193D73' }} className="text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-center items-center h-16 relative">
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-stretch space-x-0 h-full">
+              {!isAuthenticated ? (
+                <>
+                  {publicLinks.map(({ path, label, icon: Icon }) => (
+                    <NavLink
+                      key={path}
+                      to={path}
+                      onClick={() => setIsMenuOpen(false)}
+                      className={`flex items-center h-full space-x-2 px-4 rounded-none transition-colors text-white hover:bg-[#e6ad09]`}
+                      onMouseEnter={() => setHoveredPath(path)}
+                      onMouseLeave={() => setHoveredPath(null)}
+                      style={isActive(path) || hoveredPath === path ? { backgroundColor: '#e6ad09' } : undefined}
+                    >
+                      <Icon className="w-4 h-4" />
+                      <span>{label}</span>
+                    </NavLink>
+                  ))}
+                </>
+              ) : (
+                <>
+                  {privateLinks.map(({ path, label, icon: Icon }) => (
+                    <NavLink
+                      key={path}
+                      to={path}
+                      onClick={() => setIsMenuOpen(false)}
+                      className={`flex items-center h-full space-x-2 px-4 rounded-none transition-colors text-white hover:bg-[#e6ad09]`}
+                      onMouseEnter={() => setHoveredPath(path)}
+                      onMouseLeave={() => setHoveredPath(null)}
+                      style={isActive(path) || hoveredPath === path ? { backgroundColor: '#e6ad09' } : undefined}
+                    >
+                      <Icon className="w-4 h-4" />
+                      <span>{label}</span>
+                    </NavLink>
+                  ))}
+                  <div className="flex items-center space-x-2">
+                    <Link
+                      to="/perfil"
+                      className="flex items-center h-full space-x-1 px-4 rounded-none text-white hover:bg-[#e6ad09] transition-colors"
+                    >
+                      <UserIcon className="w-4 h-4" />
+                      <span>{user?.nombre || 'Usuario'}</span>
+                    </Link>
+                    <button
+                      onClick={onLogout}
+                      className="flex items-center h-full space-x-1 px-4 rounded-none text-white hover:bg-[#e6ad09] transition-colors"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>Salir</span>
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-blue-100 hover:text-white"
-            >
-              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
+            {/* Mobile menu button (positioned to the right) */}
+            <div className="md:hidden absolute right-4 top-1/2 -translate-y-1/2 flex items-center">
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="text-white hover:bg-[#e6ad09]"
+                aria-label="Abrir menú"
+              >
+                {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Navigation (dropdown below the bottom bar) */}
         {isMenuOpen && (
-          <div className="md:hidden pb-4">
+          <div className="md:hidden pb-4" style={{ backgroundColor: '#193D73' }}>
             {!isAuthenticated ? (
               <>
                 {publicLinks.map(({ path, label, icon: Icon }) => (
-                  <Link
+                  <NavLink
                     key={path}
                     to={path}
                     onClick={() => setIsMenuOpen(false)}
-                    className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors ${
-                      isActive(path)
-                        ? 'bg-blue-800 text-white'
-                        : 'text-blue-100 hover:bg-blue-800 hover:text-white'
-                    }`}
+                    className={`flex items-center space-x-2 px-3 py-2 transition-colors text-white hover:bg-[#e6ad09]`}
+                    style={isActive(path) ? { backgroundColor: '#e6ad09' } : undefined}
                   >
                     <Icon className="w-4 h-4" />
                     <span>{label}</span>
-                  </Link>
+                  </NavLink>
                 ))}
                 <Link
                   to="/login"
                   onClick={() => setIsMenuOpen(false)}
-                  className="block bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-md transition-colors mt-2"
+                  className="block bg-[#e6ad09] text-white px-3 py-2 rounded-none transition-colors mt-2 font-semibold"
                 >
                   Acceso Privado
                 </Link>
@@ -145,24 +149,21 @@ export function Navbar({ isAuthenticated, user, onLogout }: NavbarProps) {
             ) : (
               <>
                 {privateLinks.map(({ path, label, icon: Icon }) => (
-                  <Link
+                  <NavLink
                     key={path}
                     to={path}
                     onClick={() => setIsMenuOpen(false)}
-                    className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors ${
-                      isActive(path)
-                        ? 'bg-blue-800 text-white'
-                        : 'text-blue-100 hover:bg-blue-800 hover:text-white'
-                    }`}
+                    className={`flex items-center space-x-2 px-3 py-2 transition-colors text-white hover:bg-[#e6ad09]`}
+                    style={isActive(path) ? { backgroundColor: '#e6ad09' } : undefined}
                   >
                     <Icon className="w-4 h-4" />
                     <span>{label}</span>
-                  </Link>
+                  </NavLink>
                 ))}
                 <Link
                   to="/perfil"
                   onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-blue-100 hover:bg-blue-800 hover:text-white transition-colors"
+                  className="flex items-center space-x-2 px-3 py-2 text-white hover:bg-[#e6ad09] transition-colors"
                 >
                   <UserIcon className="w-4 h-4" />
                   <span>Perfil - {user?.nombre || 'Usuario'}</span>
@@ -172,7 +173,7 @@ export function Navbar({ isAuthenticated, user, onLogout }: NavbarProps) {
                     onLogout();
                     setIsMenuOpen(false);
                   }}
-                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-blue-100 hover:bg-red-600 hover:text-white transition-colors w-full text-left"
+                  className="flex items-center space-x-2 px-3 py-2 text-white hover:bg-[#e6ad09] transition-colors w-full text-left"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>Salir</span>
