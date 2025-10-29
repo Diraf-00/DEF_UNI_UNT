@@ -1,56 +1,84 @@
-import React from 'react';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Mail } from 'lucide-react';
+import styles from './Footer.module.css';
 
 export function Footer() {
   return (
-    <footer className="bg-gray-800 text-gray-300 py-8 mt-auto">
+    <footer className={`${styles.footer} py-8 mt-auto`} aria-labelledby="footer-heading">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <h2 id="footer-heading" className="sr-only">
+          Pie de página
+        </h2>
+
+  <div className={`${styles.columns} items-start`}>
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">
-              Defensoría Universitaria
-            </h3>
-            <p className="text-sm">
-              Órgano autónomo encargado de velar por el respeto de los derechos 
-              de los miembros de la comunidad universitaria y la mejora continua 
-              de la calidad del servicio educativo.
-            </p>
+            <h4 className={`${styles.heading} mb-3`}>UBICACIÓN</h4>
+            <div className={`${styles.body} space-y-2`}>
+              <p className={`${styles.body} leading-relaxed`}>
+                Av. Juan Pablo II S/N, Urb. San Andrés (Ciudad Universitaria)
+                - Pool de aulas - Edificio Administrativo (1er piso)
+              </p>
+              <p className={`${styles.small}`}>Referencia: A la altura de la primera puerta de la UNT</p>
+              <p className={`${styles.small} font-semibold mt-2`}>Horario:</p>
+              <p className={`${styles.small}`}>Lunes a viernes 7:00 a.m. a 2:45 p.m.</p>
+            </div>
           </div>
-          
+
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">
-              Contacto
-            </h3>
-            <div className="space-y-2 text-sm">
-              <div className="flex items-center space-x-2">
-                <Mail className="w-4 h-4" />
-                <span>defensoria@unt.edu.pe</span>
+            <h4 className={`${styles.heading} mb-3`}>CONTACTO</h4>
+            <div className={`${styles.body} space-y-2`}>
+              <div>
+                <p className={`${styles.small} font-semibold`}>Correo electrónico</p>
+                <a href="mailto:mesadepartes_defensoria@unitru.edu.pe" className={`${styles.link} inline-flex items-center`}>
+                  <Mail className="w-4 h-4 mr-2" /> mesadepartes_defensoria@unitru.edu.pe
+                </a>
               </div>
-              <div className="flex items-center space-x-2">
-                <Phone className="w-4 h-4" />
-                <span>+51 44 481569</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <MapPin className="w-4 h-4" />
-                <span>Universidad Nacional de Trujillo</span>
+
+              {/* Atención virtual y horarios (según póster) */}
+              <div className="mt-2">
+                <p className={`${styles.small} font-semibold`}>Atención virtual</p>
+                <p className={`${styles.small}`}>Horario:</p>
+                <p className={`${styles.small}`}>Miércoles de 1:00 p.m. a 4:00 p.m.</p>
+                <p className={`${styles.small}`}>Viernes de 1:00 p.m. a 3:00 p.m.</p>
               </div>
             </div>
           </div>
-          
+
+          {/* Enlaces de interés (columna 3) */}
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">
-              Información Legal
-            </h3>
-            <div className="space-y-1 text-sm">
-              <p>Ley Universitaria N° 30220</p>
-              <p>Ley de Protección de Datos N° 29733</p>
-              <p>Reglamento de la Defensoría</p>
-            </div>
+            <h4 className={`${styles.heading} mb-3`}>ENLACES DE INTERÉS</h4>
+            <ul className="space-y-2">
+              <li>
+                <a href="https://sgdunt.unitru.edu.pe/" target="_blank" rel="noopener noreferrer" className={`${styles.link} ${styles.small}`}>
+                  Sistema de Gestión Documentaria
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
+
         
-        <div className="border-t border-gray-700 mt-8 pt-4 text-center text-sm">
-          <p>&copy; {new Date().getFullYear()} Universidad Nacional de Trujillo. Todos los derechos reservados.</p>
+          <div className={styles.follow}>
+            <div className={styles.divider} aria-hidden="true" />
+            <p className={`${styles.heading}`}>SÍGUENOS EN</p>
+            <a
+              href="https://www.facebook.com/share/1DZQtZsosm/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${styles.social} ${styles.link} mt-2`}
+              aria-label="Ir a Facebook"
+            >
+              <svg className={styles.fbIcon} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                <path d="M22 12c0-5.522-4.477-10-10-10S2 6.478 2 12c0 4.991 3.657 9.128 8.438 9.879v-6.99H7.898v-2.89h2.54V9.845c0-2.507 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.242 0-1.63.772-1.63 1.562v1.874h2.773l-.443 2.89h-2.33V21.88C18.343 21.128 22 16.99 22 12z" />
+              </svg>
+              <span className="sr-only">Facebook</span>
+            </a>
+          </div>
+
+        <div className="border-t border-gray-600 mt-8 pt-4 text-center text-sm">
+          <p>
+            &copy; {new Date().getFullYear()} Universidad Nacional de Trujillo. Todos
+            los derechos reservados.
+          </p>
         </div>
       </div>
     </footer>

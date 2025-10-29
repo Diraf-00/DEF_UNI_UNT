@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { User } from './types';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Home } from './components/public/Home';
 import { BaseLegal } from './components/public/BaseLegal';
+import { Funciones } from './components/public/Funciones';
 import { Formularios } from './components/public/Formularios';
 import { IngresoCaso } from './components/public/IngresoCaso';
 import { SeguimientoCaso } from './components/public/SeguimientoCaso';
+import { Procedimiento } from './components/public/Procedimiento';
+import { Noticias } from './components/public/Noticias';
 import { Dashboard } from './components/private/Dashboard';
 import { GestionExpedientes } from './components/private/GestionExpedientes';
 import { DetalleExpediente } from './components/private/DetalleExpediente';
@@ -54,6 +57,9 @@ function App() {
             {/* Rutas Públicas */}
             <Route path="/" element={<Home />} />
             <Route path="/base-legal" element={<BaseLegal />} />
+            <Route path="/noticias" element={<Noticias />} />
+            <Route path="/procedimiento" element={<Procedimiento />} />
+            <Route path="/funciones" element={<Funciones />} />
             <Route path="/formularios" element={<Formularios />} />
             <Route path="/ingreso-caso" element={<IngresoCaso />} />
             <Route path="/seguimiento" element={<SeguimientoCaso />} />
