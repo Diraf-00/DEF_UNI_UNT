@@ -1,7 +1,13 @@
-import React from 'react';
 import { Download, FileText, Clock, Users, AlertCircle } from 'lucide-react';
 
 export function Formularios() {
+  const colors = {
+    darkBlue: '#132746',
+    blue: '#193D73',
+    paper: '#F3F3F1',
+    gold: '#e6ad09',
+  };
+
   const formularios = [
     {
       nombre: 'Anexo N° 01 - Formulario de Solicitud',
@@ -89,21 +95,39 @@ export function Formularios() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Formularios y Documentos
-          </h1>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Descarga los formularios oficiales necesarios para presentar tu caso 
-            ante la Defensoría Universitaria.
-          </p>
+    <div className="min-h-screen bg-gray-50 flex flex-col" style={{ maxWidth: '1050px', margin: '0 auto', width: '100%' }}>
+      <section>
+        <div style={{ maxWidth: '1050px', margin: '0 auto', width: '100%' }}>
+          <img
+            src="/images/banner-defensoria.webp"
+            alt="Banner Defensoría Universitaria"
+            className="w-full h-44 md:h-64 lg:h-80 object-cover"
+            style={{ display: 'block', width: '100%', maxWidth: '1050px', margin: '0 auto' }}
+          />
         </div>
+      </section>
 
-        {/* Alerta importante */}
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-8">
+      <main className="flex-grow w-full px-4 sm:px-6 lg:px-8 mt-10 space-y-12 pb-24">
+        <style>{`
+          :root{--panel-radius:16px;--panel-padding:1.75rem}
+          .colored-card{border-radius:var(--panel-radius);padding:var(--panel-padding);box-shadow:0 8px 25px rgba(15,23,42,0.08);transition:transform .2s ease, box-shadow .2s ease}
+          .colored-card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(15,23,42,0.12)}
+        `}</style>
+
+        <section className="p-6 md:p-8 rounded-2xl shadow-lg" style={{ backgroundColor: colors.paper }}>
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center">
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+            </div>
+            <h3 className="text-xl font-bold text-gray-800">Formularios y Documentos</h3>
+          </div>
+
+          <div className="text-gray-700 mb-6">
+            <p className="text-sm">Descarga los formularios oficiales necesarios para presentar tu caso ante la Defensoría Universitaria o utiliza el formulario en línea para mayor rapidez.</p>
+          </div>
+
+          {/* Alerta importante */}
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-8">
           <div className="flex items-start space-x-3">
             <AlertCircle className="w-5 h-5 text-yellow-600 mt-0.5" />
             <div>
@@ -117,6 +141,8 @@ export function Formularios() {
             </div>
           </div>
         </div>
+
+        </section>
 
         {/* Instrucciones */}
         <section className="mb-12">
@@ -318,7 +344,7 @@ export function Formularios() {
             </a>
           </div>
         </section>
-      </div>
+      </main>
     </div>
   );
 }
