@@ -60,7 +60,9 @@ export function Formularios() {
       version: 'v2.0',
       fechaActualizacion: '2024-02-01',
       obligatorio: true,
-      categoria: 'complementario'
+      categoria: 'complementario',
+      tieneFormularioInteractivo: true,
+      rutaFormulario: '/formulario-autorizacion-datos'
     }
   ];
 

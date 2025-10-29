@@ -7,6 +7,7 @@ import { Formularios } from './components/public/Formularios';
 import { FormularioAnexo01 } from './components/public/FormularioAnexo01';
 import { FormularioAnexo02 } from './components/public/FormularioAnexo02';
 import { FormularioDeclaracionJurada } from './components/public/FormularioDeclaracionJurada';
+import { FormularioAutorizacionDatos } from './components/public/FormularioAutorizacionDatos';
 import { IngresoCaso } from './components/public/IngresoCaso';
 import { SeguimientoCaso } from './components/public/SeguimientoCaso';
 import { Dashboard } from './components/private/Dashboard';
@@ -61,6 +62,7 @@ function App() {
             <Route path="/formulario-anexo01" element={<FormularioAnexo01 />} />
             <Route path="/formulario-anexo02" element={<FormularioAnexo02 />} />
             <Route path="/formulario-declaracion-jurada" element={<FormularioDeclaracionJurada />} />
+            <Route path="/formulario-autorizacion-datos" element={<FormularioAutorizacionDatos />} />
             <Route path="/ingreso-caso" element={<IngresoCaso />} />
             <Route path="/seguimiento" element={<SeguimientoCaso />} />
             <Route 
