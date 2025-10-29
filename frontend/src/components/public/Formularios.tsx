@@ -48,7 +48,9 @@ export function Formularios() {
       version: 'v1.0',
       fechaActualizacion: '2023-11-15',
       obligatorio: true,
-      categoria: 'complementario'
+      categoria: 'complementario',
+      tieneFormularioInteractivo: true,
+      rutaFormulario: '/formulario-declaracion-jurada'
     },
     {
       nombre: 'Autorización para Tratamiento de Datos',
@@ -303,8 +305,17 @@ export function Formularios() {
                       onClick={() => handleFormularioClick(formulario)}
                       className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors flex items-center space-x-2"
                     >
-                      <Download className="w-4 h-4" />
-                      <span>Descargar</span>
+                      {formulario.tieneFormularioInteractivo ? (
+                        <>
+                          <Edit className="w-4 h-4" />
+                          <span>Llenar Formulario</span>
+                        </>
+                      ) : (
+                        <>
+                          <Download className="w-4 h-4" />
+                          <span>Descargar</span>
+                        </>
+                      )}
                     </button>
                   </div>
                 </div>
