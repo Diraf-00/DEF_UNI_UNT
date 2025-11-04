@@ -88,13 +88,14 @@ export function Home() {
           */}
           <div className="flex flex-col sm:flex-row sm:items-start gap-8">
             <img
-              src="/images/defensor-universitario.webp"
+              src="/images/dra_vilma.png"
               alt="Defensora Universitaria"
-              className="w-44 h-44 md:w-56 md:h-56 object-cover rounded-xl shadow-lg flex-shrink-0"
+              className="object-cover rounded-xl shadow-lg flex-shrink-0"
+              style={{ width: "275px", height: "275px" }}
             />
 
             <div
-              className="value-item" // Quitado 'w-full'
+              className="value-item"
               style={{
                 borderLeft: `4px solid #193D73`,
                 backgroundColor: `#193D7315`,
@@ -107,9 +108,7 @@ export function Home() {
                 {autoridades.cargo}
               </p>
 
-              <p className="text-sm text-gray-700">
-                {autoridades.descripcion}
-              </p>
+              <p className="text-sm text-gray-700">{autoridades.descripcion}</p>
             </div>
           </div>
         </section>

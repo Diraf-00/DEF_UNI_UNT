@@ -15,10 +15,10 @@ export function Footer() {
             <div className={`${styles.body} space-y-2`}>
               <p className={`${styles.body} leading-relaxed`}>
                 Av. Juan Pablo II S/N, Urb. San Andrés (Ciudad Universitaria)
-                - Pool de aulas - Edificio Administrativo (1er piso)
               </p>
-              <p className={`${styles.small}`}>Referencia: A la altura de la primera puerta de la UNT</p>
-              <p className={`${styles.small} font-semibold mt-2`}>Horario:</p>
+              <p className={`${styles.small}`}>Pool de aulas: Edificio Administrativo (1er piso)</p>
+              <p className={`${styles.small}`}>Referencia: A la altura de la priemra puerta de la UNT</p>
+              <p className={`${styles.body} font-semibold mt-4`}>Horario de atención presencial:</p>
               <p className={`${styles.small}`}>Lunes a viernes 7:00 a.m. a 2:45 p.m.</p>
             </div>
           </div>
@@ -27,7 +27,7 @@ export function Footer() {
             <h4 className={`${styles.heading} mb-3`}>CONTACTO</h4>
             <div className={`${styles.body} space-y-2`}>
               <div>
-                <p className={`${styles.small} font-semibold`}>Correo electrónico</p>
+                <p className={`${styles.body} font-semibold`}>Correo electrónico</p>
                 <a href="mailto:mesadepartes_defensoria@unitru.edu.pe" className={`${styles.link} inline-flex items-center`}>
                   <Mail className="w-4 h-4 mr-2" /> mesadepartes_defensoria@unitru.edu.pe
                 </a>
@@ -35,8 +35,7 @@ export function Footer() {
 
               {/* Atención virtual y horarios (según póster) */}
               <div className="mt-2">
-                <p className={`${styles.small} font-semibold`}>Atención virtual</p>
-                <p className={`${styles.small}`}>Horario:</p>
+                <p className={`${styles.body} font-semibold`}>Horario de atención virtual: </p>
                 <p className={`${styles.small}`}>Miércoles de 1:00 p.m. a 4:00 p.m.</p>
                 <p className={`${styles.small}`}>Viernes de 1:00 p.m. a 3:00 p.m.</p>
               </div>
