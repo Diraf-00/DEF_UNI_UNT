@@ -21,6 +21,7 @@ export function Navbar({ isAuthenticated, user, onLogout }: NavbarProps) {
     { path: '/funciones', label: 'Funciones', icon: Shield },
     { path: '/base-legal', label: 'Documentos', icon: BookOpen },
     { path: '/procedimiento', label: 'Procedimiento y Recursos', icon: Clipboard },
+    { path: '/llenado-formularios', label: 'Documentos en Línea', icon: FileText},
     { path: '/ingreso-caso', label: 'Formulario de Atención', icon: FilePlus },
     { path: '/noticias', label: 'Noticias y Difusión', icon: Megaphone },
   ];
