@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { FileText, FileCheck, Shield, ScrollText } from 'lucide-react';
+import { FileText, FileCheck, Shield, ScrollText, Mail } from 'lucide-react';
 
 export function LlenadoFormularios() {
   const navigate = useNavigate();
@@ -136,18 +136,20 @@ export function LlenadoFormularios() {
           <p className="text-gray-700 mb-4">
             Si tiene dudas sobre cómo completar algún formulario o necesita asesoría, puede contactarnos:
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div className="flex items-center space-x-2 text-gray-700">
-              <span className="font-semibold">📧 Correo:</span>
-              <span>defensoria@unt.edu.pe</span>
-            </div>
-            <div className="flex items-center space-x-2 text-gray-700">
-              <span className="font-semibold">📞 Teléfono:</span>
-              <span>(044) 123-4567</span>
+              <span className="font-semibold">Correo electrónico:</span>
+              <a 
+                href="mailto:mesadepartes_defensoria@unitru.edu.pe" 
+                className="text-blue-600 hover:text-blue-700 underline inline-flex items-center"
+              >
+                <Mail className="w-4 h-4 mr-2" /> 
+                mesadepartes_defensoria@unitru.edu.pe
+              </a>
             </div>
             <div className="flex items-center space-x-2 text-gray-700">
               <span className="font-semibold">🕐 Horario:</span>
-              <span>Lun-Vie 8:00-16:00</span>
+              <span>Miércoles y Viernes de 1:00 p.m. a 4:00 p.m.</span>
             </div>
           </div>
         </div>

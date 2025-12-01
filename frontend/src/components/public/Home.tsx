@@ -16,7 +16,7 @@ export function Home() {
     nombre: "Dra. Vilma Méndez Gil",
     cargo: "Defensora Universitaria",
     descripcion:
-      "Doctora en Derecho, con amplia trayectoria en gestión de conflictos y promoción de los derechos humanos dentro del ámbito universitario.",
+      "Licenciada en Física. Maestra en docencia universitaria. Doctora en Ciencias e ingeniería, con amplia trayectoria en gestión de conflictos y promoción de los derechos humanos dentro del ámbito universitario.",
   };
 
   // Fixed maximum page width to match banner/content
