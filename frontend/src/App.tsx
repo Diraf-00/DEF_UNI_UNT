@@ -19,10 +19,9 @@ import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { LlenadoFormularios } from './components/public/Llenado-formularios';
 import { FormularioAnexo01 } from './components/public/FormularioAnexo01';
-import { FormularioAnexo02 } from './components/public/FormularioAnexo02';
-import { FormularioAutorizacionDatos } from './components/public/FormularioAutorizacionDatos';
-import { FormularioDeclaracionJurada } from './components/public/FormularioDeclaracionJurada';
-
+// import { FormularioAnexo02 } from './components/public/FormularioAnexo02';
+// import { FormularioAutorizacionDatos } from './components/public/FormularioAutorizacionDatos';
+// import { FormularioDeclaracionJurada } from './components/public/FormularioDeclaracionJurada';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -72,9 +71,9 @@ function App() {
             <Route path="/formularios" element={<Formularios />} />
             <Route path="/llenado-formularios" element={<LlenadoFormularios />} />
             <Route path="/llenado-formularios/formulario-anexo-01" element={<FormularioAnexo01 />} />
-            <Route path="/llenado-formularios/formulario-anexo-02" element={<FormularioAnexo02 />} />
-            <Route path="/llenado-formularios/formulario-autorizacion-datos" element={<FormularioAutorizacionDatos />} />
-            <Route path="/llenado-formularios/formulario-declaracion-jurada" element={<FormularioDeclaracionJurada />} />
+            {/* <Route path="/llenado-formularios/formulario-anexo-02" element={<FormularioAnexo02 />} /> */}
+            {/* <Route path="/llenado-formularios/formulario-autorizacion-datos" element={<FormularioAutorizacionDatos />} /> */}
+            {/* <Route path="/llenado-formularios/formulario-declaracion-jurada" element={<FormularioDeclaracionJurada />} /> */}
             <Route 
               path="/login"  
               element={
