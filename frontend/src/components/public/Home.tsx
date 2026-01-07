@@ -78,7 +78,7 @@ export function Home() {
           }}
         >
           <div className="flex items-center gap-3 mb-4">
-            <Shield className="text-orange-500 w-6 h-6" />
+            
             <h3 className="text-xl font-bold text-gray-800">Autoridad</h3>
           </div>
 
@@ -121,7 +121,7 @@ export function Home() {
           }}
         >
           <div className="flex items-center gap-3 mb-4">
-            <Shield className="text-orange-500 w-6 h-6" />
+            
             <h3 className="text-xl font-bold text-gray-800">Misión y Visión</h3>
           </div>
 
@@ -169,7 +169,7 @@ export function Home() {
           }}
         >
           <div className="flex items-center gap-3 mb-4">
-            <Scale className="text-blue-600 w-6 h-6" />
+            
             <h3 className="text-xl font-bold text-gray-800">
               Valores y Principios
             </h3>

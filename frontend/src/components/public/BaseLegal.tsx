@@ -24,12 +24,14 @@ export function BaseLegal() {
     {
       titulo: 'D.S. N° 016-2015-MINEDU',
       descripcion: 'Reglamento de la Ley Universitaria',
-      fecha: '2015-12-26'
+      fecha: '2015-12-26',
+      url: 'https://www.gob.pe/institucion/minedu/normas-legales/118310-016-2015-minedu'
     },
     {
       titulo: 'Resolución de Superintendencia N° 033-2017-SUNEDU',
       descripcion: 'Reglamento del Registro Nacional de Grados y Títulos',
-      fecha: '2017-08-28'
+      fecha: '2017-08-28',
+      url: 'https://www.gob.pe/institucion/sunedu/normas-legales/614425-033-2017'
     }
   ];
 
@@ -62,7 +64,7 @@ export function BaseLegal() {
 
               <div className="mt-6">
                 <a
-                  href="/docs/Reglamento-003-2025-DEF.UNIV-UNT.pdf"
+                  href="/docs/Reglamento N°003-2025-DEF.UNIV-UNT.pdf"
                   className="inline-flex items-center gap-2 text-blue-700 hover:text-blue-900 font-semibold"
                   download
                 >
@@ -77,7 +79,20 @@ export function BaseLegal() {
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">Decretos y Resoluciones</h3>
                 {decretos.map((d, i) => (
                   <div key={i} className={`mb-4 ${i !== decretos.length - 1 ? 'border-b border-gray-100 pb-4' : ''}`}>
-                    <h4 className="font-medium text-gray-800">{d.titulo}</h4>
+                    <h4 className="font-medium text-gray-800">
+                      {d.url ? (
+                        <a 
+                          href={d.url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-800 hover:underline"
+                        >
+                          {d.titulo}
+                        </a>
+                      ) : (
+                        d.titulo
+                      )}
+                    </h4>
                     <p className="text-gray-600 text-sm">{d.descripcion}</p>
                     <span className="text-xs text-gray-500">{new Date(d.fecha).toLocaleDateString('es-PE')}</span>
                   </div>
