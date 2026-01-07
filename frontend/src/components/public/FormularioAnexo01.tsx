@@ -12,26 +12,26 @@ interface FormData {
   domicilio: string;
   escuelaProfesional: string;
   correo: string;
-  
+
   // Motivo
   motivo: 'denuncia' | 'reclamo' | 'queja' | 'otro' | '';
   motivoOtro: string;
-  
+
   // Instancia previa
   instanciaPrevia: 'si' | 'no' | '';
-  
+
   // Descripción de hechos
   descripcionHechos: string;
-  
+
   // Derechos afectados
   derechosAfectados: string;
-  
+
   // Pretensiones
   pretensiones: string;
-  
+
   // Medios probatorios
   mediosProbatorios: string;
-  
+
   // Firma
   firmaFile: File | null;
   lugar: string;
@@ -290,10 +290,10 @@ export function FormularioAnexo01() {
       yPos += lineHeight;
 
       doc.setFont('helvetica', 'normal');
-      const fechaFormateada = new Date(formData.fecha).toLocaleDateString('es-PE', { 
-        day: 'numeric', 
-        month: 'long', 
-        year: 'numeric' 
+      const fechaFormateada = new Date(formData.fecha).toLocaleDateString('es-PE', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
       });
       doc.text(`${formData.lugar}, ${fechaFormateada}`, margin, yPos);
       yPos += lineHeight + 15;
@@ -307,7 +307,7 @@ export function FormularioAnexo01() {
             // Agregar imagen de firma
             doc.addImage(imgData, 'PNG', margin + 40, yPos, 40, 20);
             yPos += 25;
-            
+
             doc.setFont('helvetica', 'normal');
             doc.setFontSize(10);
             doc.text('_____________________________', margin + 30, yPos);
@@ -330,7 +330,7 @@ export function FormularioAnexo01() {
             doc.text('Firma', margin + 55, yPos);
             yPos += 5;
             doc.text(`DNI: ${formData.dnifirma}`, margin + 45, yPos);
-            
+
             doc.save(`Anexo_01_${formData.nombresApellidos.replace(/\s+/g, '_')}.pdf`);
             alert('PDF generado exitosamente (sin imagen de firma)');
           }
@@ -345,7 +345,7 @@ export function FormularioAnexo01() {
         doc.text('Firma', margin + 55, yPos);
         yPos += 5;
         doc.text(`DNI: ${formData.dnifirma}`, margin + 45, yPos);
-        
+
         doc.save(`Anexo_01_${formData.nombresApellidos.replace(/\s+/g, '_')}.pdf`);
         alert('PDF generado exitosamente');
       }
@@ -377,7 +377,7 @@ export function FormularioAnexo01() {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Volver a Documentos en Línea
           </button>
-          
+
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               Anexo N° 01
@@ -852,17 +852,17 @@ export function FormularioAnexo01() {
                 <Download className="w-5 h-5" />
                 <span>Descargar en PDF</span>
               </button>
-              
-              <button
+
+              {/*<button
                 type="button"
                 onClick={handleGenerateWord}
                 className="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center space-x-2 font-medium"
               >
                 <Download className="w-5 h-5" />
                 <span>Descargar en Word</span>
-              </button>
+              </button>*/}
             </div>
-            
+
             <p className="text-sm text-gray-500 text-center mt-4">
               Una vez generado el documento, revíselo antes de presentarlo oficialmente
             </p>
