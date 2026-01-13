@@ -16,14 +16,14 @@ export function Home() {
     nombre: "Dra. Vilma Méndez Gil",
     cargo: "Defensora Universitaria",
     descripcion:
-      "Licenciada en Física. Maestra en docencia universitaria. Doctora en Ciencias e ingeniería, con amplia trayectoria en gestión de conflictos y promoción de los derechos humanos dentro del ámbito universitario.",
+      "Licenciada en Física. Maestra en docencia universitaria. Doctora en Ciencias e Ingeniería, past. Vicerrectora Académica UNT. Con amplia experiencia académica, trayectoria en gestión de conflictos y promoción de los derechos humanos dentro del ámbito universitario.",
   };
 
   // Fixed maximum page width to match banner/content
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col" style={{ maxWidth: "1050px", margin: "0 auto", width: "100%" }}>
-  {/* Banner superior */}
+      {/* Banner superior */}
       <section>
         <div style={{ maxWidth: "1050px", margin: "0 auto", width: "100%" }}>
           <img
@@ -38,7 +38,7 @@ export function Home() {
       {/* CAMBIO 1: Añadido 'max-w-6xl' para limitar el ancho máximo
         del contenido y evitar que se "estire" en pantallas grandes.
       */}
-  <main className="flex-grow w-full px-4 sm:px-6 lg:px-8 mt-10 space-y-16 pb-24">
+      <main className="flex-grow w-full px-4 sm:px-6 lg:px-8 mt-10 space-y-16 pb-24">
         <style>{`
           :root{--panel-radius:16px;--panel-padding:1.75rem}
           .colored-card{border-radius:var(--panel-radius);padding:var(--panel-padding);box-shadow:0 8px 25px rgba(15,23,42,0.08);transition:transform .2s ease, box-shadow .2s ease}
@@ -78,7 +78,7 @@ export function Home() {
           }}
         >
           <div className="flex items-center gap-3 mb-4">
-            
+
             <h3 className="text-xl font-bold text-gray-800">Autoridad</h3>
           </div>
 
@@ -121,7 +121,7 @@ export function Home() {
           }}
         >
           <div className="flex items-center gap-3 mb-4">
-            
+
             <h3 className="text-xl font-bold text-gray-800">Misión y Visión</h3>
           </div>
 
@@ -154,8 +154,7 @@ export function Home() {
                 <h4 className="font-semibold">Visión</h4>
               </div>
               <p className="text-sm text-gray-700">
-                Ser un referente nacional en la defensa de los derechos
-                universitarios.
+                Ser un referente nacional en la defensa de los derechos de la comunidad universitaria.
               </p>
             </div>
           </div>
@@ -169,7 +168,7 @@ export function Home() {
           }}
         >
           <div className="flex items-center gap-3 mb-4">
-            
+
             <h3 className="text-xl font-bold text-gray-800">
               Valores y Principios
             </h3>
@@ -179,7 +178,7 @@ export function Home() {
             {[
               {
                 title: "Independencia y autonomía",
-                text: "No recibe instrucciones de ninguna autoridad.",
+                text: "Cuenta con autonomía funcional.",
                 color: colors.gold,
                 icon: <Shield className="text-yellow-600 w-5 h-5" />,
               },
@@ -197,7 +196,7 @@ export function Home() {
               },
               {
                 title: "Supletoriedad",
-                text: "Aplica los principios del procedimiento administrativo general.",
+                text: "Actúa ante la omisión funcional de otras instancias.",
                 color: colors.orange,
                 icon: <FileText className="text-orange-600 w-5 h-5" />,
               },

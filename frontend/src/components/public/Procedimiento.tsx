@@ -14,11 +14,11 @@ export function Procedimiento() {
 
   const pasos = [
     { titulo: 'Solicitud', descripcion: 'Por escrito o medio virtual mediante formulario oficial. Incluye datos del denunciante, descripción de hechos, pretensión y pruebas.' },
-    { titulo: 'Registro', descripcion: 'Se asigna un número de expediente y código anónimo (Art. 22).' },
+    { titulo: 'Registro', descripcion: 'Se asigna un número de expediente principal y un número de registro (Art. 22).' },
     { titulo: 'Admisibilidad', descripcion: 'Evaluación dentro de 5 días hábiles; si no cumple requisitos se solicita subsanación o se archiva (Art. 23).' },
-    { titulo: 'Investigación', descripcion: 'Solicitud de información y descargos a las áreas involucradas. Plazo máximo: 30 días calendario (Art. 18).' },
-    { titulo: 'Conciliación', descripcion: 'Se cita a las partes para lograr acuerdo. Si hay acuerdo, se levanta Acta de Mediación (Anexo 2).' },
-    { titulo: 'Recomendaciones', descripcion: 'Si no hay acuerdo, se emiten recomendaciones (no vinculantes).' },
+    { titulo: 'Investigación', descripcion: 'Plazo máximo: 30 días calendario (Art. 18).' },
+    { titulo: 'Conciliación', descripcion: 'Se cita a las partes para lograr acuerdo. Si hay acuerdo, se levanta Acta de Mediación; de lo contrario, se emite un informe final con las recomendaciones pertinentes (Anexo 2).' },
+    //{ titulo: 'Recomendaciones', descripcion: 'Si no hay acuerdo, se emiten recomendaciones (no vinculantes).' },
     { titulo: 'Informe final', descripcion: 'Incluye hechos, análisis, medidas y cumplimiento; se entrega a las partes y al Rectorado (Art. 28).' },
   ];
 
@@ -98,7 +98,7 @@ export function Procedimiento() {
               <div className="space-y-4">
                 {pasos.map((p, idx) => {
                   const isFlipped = tarjetasVolteadas.has(idx);
-                  
+
                   const toggleFlip = () => {
                     const newSet = new Set(tarjetasVolteadas);
                     if (isFlipped) {
@@ -108,74 +108,73 @@ export function Procedimiento() {
                     }
                     setTarjetasVolteadas(newSet);
                   };
-                  
+
                   return (
                     <div key={idx} className="relative flex justify-center">
                       {/* Línea conectora (excepto el último) */}
                       {idx < pasos.length - 1 && (
-                        <div 
-                          className={`absolute top-full w-0.5 h-4 transition-colors duration-200 ${
-                            isFlipped ? 'bg-blue-500' : 'bg-gray-300'
-                          }`}
+                        <div
+                          className={`absolute top-full w-0.5 h-4 transition-colors duration-200 ${isFlipped ? 'bg-blue-500' : 'bg-gray-300'
+                            }`}
                         />
                       )}
-                      
+
                       {/* Tarjeta con efecto flip */}
-                      <div 
+                      <div
                         className={`flip-card-container ${isFlipped ? 'flipped' : ''}`}
                       >
                         <div className="flip-card">
                           <div className="flip-card-inner">
-                          {/* Cara frontal */}
-                          <button
-                            onClick={toggleFlip}
-                            className="flip-card-front flex flex-col items-center justify-center p-6 border-2 border-gray-200 bg-white hover:border-blue-300 hover:bg-blue-50/50 hover:shadow-sm transition-all duration-200 cursor-pointer"
-                            style={{ 
-                              borderRadius: '8px',
-                            }}
-                          >
-                            {/* Número del paso */}
-                            <div 
-                              className="w-16 h-16 flex items-center justify-center font-bold text-2xl mb-4 bg-blue-100 text-blue-700"
-                              style={{ borderRadius: '8px' }}
+                            {/* Cara frontal */}
+                            <button
+                              onClick={toggleFlip}
+                              className="flip-card-front flex flex-col items-center justify-center p-6 border-2 border-gray-200 bg-white hover:border-blue-300 hover:bg-blue-50/50 hover:shadow-sm transition-all duration-200 cursor-pointer"
+                              style={{
+                                borderRadius: '8px',
+                              }}
                             >
-                              {idx + 1}
-                            </div>
-                            
-                            {/* Título del paso */}
-                            <h5 className="font-semibold text-center text-base text-gray-800">
-                              {p.titulo}
-                            </h5>
-                          </button>
-                          
-                          {/* Cara trasera */}
-                          <button
-                            onClick={toggleFlip}
-                            className="flip-card-back flex flex-col items-start p-4 border-2 border-blue-500 bg-blue-50 shadow-md transition-all duration-200 cursor-pointer"
-                            style={{ 
-                              borderRadius: '8px',
-                            }}
-                          >
-                            {/* Número del paso en la parte trasera */}
-                            <div 
-                              className="w-10 h-10 flex items-center justify-center font-bold text-lg mb-2 bg-blue-600 text-white self-center flex-shrink-0"
-                              style={{ borderRadius: '8px' }}
+                              {/* Número del paso */}
+                              <div
+                                className="w-16 h-16 flex items-center justify-center font-bold text-2xl mb-4 bg-blue-100 text-blue-700"
+                                style={{ borderRadius: '8px' }}
+                              >
+                                {idx + 1}
+                              </div>
+
+                              {/* Título del paso */}
+                              <h5 className="font-semibold text-center text-base text-gray-800">
+                                {p.titulo}
+                              </h5>
+                            </button>
+
+                            {/* Cara trasera */}
+                            <button
+                              onClick={toggleFlip}
+                              className="flip-card-back flex flex-col items-start p-4 border-2 border-blue-500 bg-blue-50 shadow-md transition-all duration-200 cursor-pointer"
+                              style={{
+                                borderRadius: '8px',
+                              }}
                             >
-                              {idx + 1}
-                            </div>
-                            
-                            {/* Título del paso */}
-                            <h5 className="font-semibold text-center text-sm text-blue-700 mb-2 w-full flex-shrink-0">
-                              {p.titulo}
-                            </h5>
-                            
-                            {/* Descripción con scroll si es necesario */}
-                            <div className="flex-1 overflow-y-auto w-full">
-                              <p className="text-xs text-gray-700 text-left leading-relaxed">
-                                {p.descripcion}
-                              </p>
-                            </div>
-                          </button>
+                              {/* Número del paso en la parte trasera */}
+                              <div
+                                className="w-10 h-10 flex items-center justify-center font-bold text-lg mb-2 bg-blue-600 text-white self-center flex-shrink-0"
+                                style={{ borderRadius: '8px' }}
+                              >
+                                {idx + 1}
+                              </div>
+
+                              {/* Título del paso */}
+                              <h5 className="font-semibold text-center text-sm text-blue-700 mb-2 w-full flex-shrink-0">
+                                {p.titulo}
+                              </h5>
+
+                              {/* Descripción con scroll si es necesario */}
+                              <div className="flex-1 overflow-y-auto w-full">
+                                <p className="text-xs text-gray-700 text-left leading-relaxed">
+                                  {p.descripcion}
+                                </p>
+                              </div>
+                            </button>
                           </div>
                         </div>
                       </div>

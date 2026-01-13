@@ -144,10 +144,7 @@ export function LlenadoFormularios() {
                 mesadepartes_defensoria@unitru.edu.pe
               </a>
             </div>
-            <div className="flex items-center space-x-2 text-gray-700">
-              <span className="font-semibold">🕐 Horario:</span>
-              <span>Miércoles y Viernes de 1:00 p.m. a 4:00 p.m.</span>
-            </div>
+
           </div>
         </div>
       </div>

@@ -25,11 +25,12 @@ export function Funciones() {
   ];
 
   const noFunciones = [
-    'Derechos colectivos o laborales.',
+    'Derechos colectivos.',
+    'Derechos laborales.',
     'Medidas disciplinarias.',
     'Evaluaciones académicas de docentes o alumnos.',
     'Casos impugnables por otras vías legales.',
-    'Reclamos del Código de Defensa del Consumidor (Libro de Reclamaciones).',
+    'Reclamos y quejas previstas en el Código de Defensa y Protección del Consumidor.',
     'Denuncias anónimas o sin fundamento razonable.',
   ];
 
@@ -44,7 +45,7 @@ export function Funciones() {
     },
     {
       q: '¿Se puede presentar una denuncia anónima?',
-      a: 'No, debe estar identificada (Art. 23).',
+      a: 'No, la parte denunciante debe estar plenamente identificada (Art. 23).',
     },
     {
       q: '¿Qué pasa luego de admitida mi queja?',
@@ -52,11 +53,11 @@ export function Funciones() {
     },
     {
       q: '¿La Defensoría tiene competencia sobre casos de acoso sexual?',
-      a: 'Sí, si involucra derechos individuales y hechos dentro de la comunidad universitaria.',
+      a: 'No, dichos casos son de competencia de la Secretaría de Instrucción para Actos de Hostigamiento Sexual.',
     },
     {
       q: '¿Dónde puedo hacer seguimiento de mi caso?',
-      a: 'A través del número de expediente asignado (Art. 22).',
+      a: 'A través del correo de defensoría.',
     },
   ];
 
