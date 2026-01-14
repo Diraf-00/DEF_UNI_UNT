@@ -12,6 +12,8 @@ interface FormData {
   domicilio: string;
   escuelaProfesional: string;
   correo: string;
+  codigoUNT: string;
+  semestreAno: string;
 
   // Motivo
   motivo: 'denuncia' | 'reclamo' | 'queja' | 'otro' | '';
@@ -49,6 +51,8 @@ export function FormularioAnexo01() {
     domicilio: '',
     escuelaProfesional: '',
     correo: '',
+    codigoUNT: '',
+    semestreAno: '',
     motivo: '',
     motivoOtro: '',
     instanciaPrevia: '',
@@ -119,6 +123,8 @@ export function FormularioAnexo01() {
     if (!formData.nombresApellidos) newErrors.nombresApellidos = 'Ingrese nombres y apellidos';
     if (!formData.dni) newErrors.dni = 'Ingrese DNI';
     if (!formData.correo) newErrors.correo = 'Ingrese correo electrónico';
+    if (!formData.codigoUNT) newErrors.codigoUNT = 'Ingrese Código UNT';
+    if (!formData.semestreAno) newErrors.semestreAno = 'Ingrese Semestre/Año';
     if (!formData.motivo) newErrors.motivo = 'Seleccione el motivo';
     if (formData.motivo === 'otro' && !formData.motivoOtro) {
       newErrors.motivoOtro = 'Especifique el motivo';
@@ -190,6 +196,10 @@ export function FormularioAnexo01() {
       yPos += lineHeight;
 
       doc.text(`Correo electrónico: ${formData.correo}`, margin, yPos);
+      yPos += lineHeight;
+
+      doc.text(`Código UNT: ${formData.codigoUNT}`, margin, yPos);
+      doc.text(`Semestre/Año: ${formData.semestreAno}`, margin + 70, yPos);
       yPos += lineHeight + 5;
 
       // 2. MOTIVO
@@ -547,6 +557,44 @@ export function FormularioAnexo01() {
               {errors.correo && (
                 <p className="text-red-500 text-sm mt-1">{errors.correo}</p>
               )}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              {/* Codigo UNT */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Código UNT <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="codigoUNT"
+                  value={formData.codigoUNT}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Ingrese Código UNT"
+                />
+                {errors.codigoUNT && (
+                  <p className="text-red-500 text-sm mt-1">{errors.codigoUNT}</p>
+                )}
+              </div>
+
+              {/* Semestre/Año */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Semestre/Año <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="semestreAno"
+                  value={formData.semestreAno}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Ej: 2024-I"
+                />
+                {errors.semestreAno && (
+                  <p className="text-red-500 text-sm mt-1">{errors.semestreAno}</p>
+                )}
+              </div>
             </div>
           </section>
 
