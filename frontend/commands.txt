@@ -1,0 +1,17 @@
+# Comandos principales para ejecutar el frontend en Docker
+
+# 1) Construir la imagen (usar desde /frontend)
+docker build -t defensoria-universitaria .
+
+# 2) Ejecutar el contenedor exponiendo el puerto 8080 -> 80
+#    (el contenedor usa Nginx con routing SPA y endpoint /health)
+docker run -d -p 8080:80 --name defensoria-web defensoria-universitaria
+
+# 3) Revisar logs (opcional)
+docker logs -f defensoria-web
+
+# 4) Probar healthcheck local (opcional)
+curl http://localhost:8080/health
+
+# 5) Detener y remover el contenedor cuando ya no se use
+docker stop defensoria-web && docker rm defensoria-web

@@ -54,6 +54,20 @@ npm run dev
 npm run build
 ```
 
+### Docker
+
+Construye e inicia la imagen lista para producción.
+
+```bash
+# Construir la imagen
+docker build -t defensoria-universitaria .
+
+# Ejecutar el contenedor en el puerto 8080
+docker run -d -p 8080:80 --name defensoria-web defensoria-universitaria
+```
+
+El contenedor sirve los archivos estáticos con Nginx y expone un endpoint de salud en `/health`.
+
 ## 📁 Estructura del Proyecto
 
 ```
