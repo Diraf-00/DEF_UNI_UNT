@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Toaster } from 'sonner';
 import { Home } from './components/public/Home';
 import { BaseLegal } from './components/public/BaseLegal';
 import { Funciones } from './components/public/Funciones';
@@ -13,6 +14,7 @@ function App() {
   return (
     <Router>
       <div className="min-h-screen bg-gray-50 flex flex-col">
+        <Toaster position="top-center" richColors />
         <Navbar />
 
         <main className="flex-grow">

@@ -1,206 +1,54 @@
-import React, { useState } from 'react';
-import { Upload, Download, FileText, X, ArrowLeft } from 'lucide-react';
+
+import { Upload, Download, FileText, ArrowLeft, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import jsPDF from 'jspdf';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'sonner';
 
-interface FormData {
-  // Datos del recurrente
-  tipoRecurrente: 'docente' | 'estudiante' | 'administrativo' | '';
-  nombresApellidos: string;
-  dni: string;
-  celular: string;
-  domicilio: string;
-  escuelaProfesional: string;
-  correo: string;
-  codigoUNT: string;
-  semestreAno: string;
-
-  // Motivo
-  motivo: 'denuncia' | 'reclamo' | 'queja' | 'otro' | '';
-  motivoOtro: string;
-
-  // Instancia previa
-  instanciaPrevia: 'si' | 'no' | '';
-
-  // Descripción de hechos
-  descripcionHechos: string;
-
-  // Derechos afectados
-  derechosAfectados: string;
-
-  // Pretensiones
-  pretensiones: string;
-
-  // Medios probatorios
-  mediosProbatorios: string;
-
-  // Firma
-  firmaFile: File | null;
-  lugar: string;
-  fecha: string;
-  dnifirma: string;
-}
+import { anexo01Schema, Anexo01Values } from '../../validations/form-schemas';
+import { FormError } from '../../components/ui/FormError';
 
 export function FormularioAnexo01() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<FormData>({
-    tipoRecurrente: '',
-    nombresApellidos: '',
-    dni: '',
-    celular: '',
-    domicilio: '',
-    escuelaProfesional: '',
-    correo: '',
-    codigoUNT: '',
-    semestreAno: '',
-    motivo: '',
-    motivoOtro: '',
-    instanciaPrevia: '',
-    descripcionHechos: '',
-    derechosAfectados: '',
-    pretensiones: '',
-    mediosProbatorios: '',
-    firmaFile: null,
-    lugar: 'Trujillo',
-    fecha: new Date().toISOString().split('T')[0],
-    dnifirma: ''
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors }
+  } = useForm<Anexo01Values>({
+    resolver: zodResolver(anexo01Schema),
+    defaultValues: {
+      tipoRecurrente: undefined,
+      nombresApellidos: '',
+      dni: '',
+      celular: '',
+      domicilio: '',
+      escuelaProfesional: '',
+      correo: '',
+      codigoUNT: '',
+      semestreAno: '',
+      motivo: undefined,
+      motivoOtro: '',
+      instanciaPrevia: undefined,
+      descripcionHechos: '',
+      derechosAfectados: '',
+      pretensiones: '',
+      mediosProbatorios: '',
+      firmaFile: undefined,
+      lugar: 'Trujillo',
+      fecha: new Date().toISOString().split('T')[0],
+      dnifirma: ''
+    }
   });
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const firmaFile = watch('firmaFile');
+  const motivo = watch('motivo');
 
-  const validateInput = (name: string, value: string) => {
-    switch (name) {
-      case 'nombresApellidos':
-      case 'lugar':
-        // Only letters and spaces
-        if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/.test(value)) return false;
-        break;
-      case 'dni':
-      case 'dnifirma':
-      case 'codigoUNT':
-        // Only numbers, max length handled by maxLength prop but good to check
-        if (!/^\d*$/.test(value)) return false;
-        break;
-      case 'celular':
-        if (!/^\d*$/.test(value)) return false;
-        break;
-    }
-    return true;
-  };
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-
-    // Strict Input Validation
-    if (!validateInput(name, value)) return;
-
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors[name];
-        return newErrors;
-      });
-    }
-  };
-
-  const handleRadioChange = (name: string, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Validar que sea PNG o JPG
-      if (file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg') {
-        setFormData(prev => ({
-          ...prev,
-          firmaFile: file
-        }));
-        setErrors(prev => {
-          const newErrors = { ...prev };
-          delete newErrors.firmaFile;
-          return newErrors;
-        });
-      } else {
-        setErrors(prev => ({
-          ...prev,
-          firmaFile: 'Solo se permiten archivos PNG o JPG'
-        }));
-      }
-    }
-  };
-
-  const validateForm = (): boolean => {
-    const newErrors: Record<string, string> = {};
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!formData.tipoRecurrente) newErrors.tipoRecurrente = 'Seleccione el tipo de recurrente';
-
-    if (!formData.nombresApellidos.trim()) newErrors.nombresApellidos = 'Ingrese nombres y apellidos';
-
-    if (!formData.dni) {
-      newErrors.dni = 'Ingrese DNI';
-    } else if (formData.dni.length !== 8) {
-      newErrors.dni = 'El DNI debe tener 8 dígitos';
-    }
-
-    if (!formData.celular) {
-      newErrors.celular = 'Ingrese celular';
-    } else if (formData.celular.length !== 9) {
-      newErrors.celular = 'El celular debe tener 9 dígitos';
-    }
-
-    if (!formData.domicilio.trim()) newErrors.domicilio = 'Ingrese domicilio';
-
-    if (!formData.escuelaProfesional.trim()) newErrors.escuelaProfesional = 'Ingrese Escuela Profesional / Dependencia';
-
-    if (!formData.correo) {
-      newErrors.correo = 'Ingrese correo electrónico';
-    } else if (!emailRegex.test(formData.correo)) {
-      newErrors.correo = 'Ingrese un correo electrónico válido';
-    }
-
-    if (!formData.codigoUNT) newErrors.codigoUNT = 'Ingrese Código UNT';
-    if (!formData.semestreAno) newErrors.semestreAno = 'Ingrese Año/Semestre';
-
-    if (!formData.motivo) newErrors.motivo = 'Seleccione el motivo';
-    if (formData.motivo === 'otro' && !formData.motivoOtro.trim()) {
-      newErrors.motivoOtro = 'Especifique el motivo';
-    }
-
-    if (!formData.descripcionHechos.trim()) newErrors.descripcionHechos = 'Ingrese la descripción de los hechos obligatoriamente';
-
-    if (!formData.lugar.trim()) newErrors.lugar = 'Ingrese el lugar';
-    if (!formData.fecha) newErrors.fecha = 'Ingrese la fecha';
-
-    if (!formData.firmaFile) newErrors.firmaFile = 'Suba su firma (PNG o JPG)';
-
-    if (!formData.dnifirma) {
-      newErrors.dnifirma = 'Ingrese DNI de la firma';
-    } else if (formData.dnifirma !== formData.dni) {
-      newErrors.dnifirma = 'El DNI de la firma debe coincidir con el DNI del solicitante';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleGeneratePDF = async () => {
-    if (!validateForm()) {
-      alert('Por favor complete todos los campos obligatorios');
-      return;
-    }
-
+  const onSubmit = async (data: Anexo01Values) => {
     try {
       const doc = new jsPDF();
       const pageWidth = doc.internal.pageSize.getWidth();
@@ -235,28 +83,28 @@ export function FormularioAnexo01() {
       yPos += lineHeight;
 
       doc.setFont('helvetica', 'normal');
-      const tipoRecurrenteTexto = `Docente (${formData.tipoRecurrente === 'docente' ? 'X' : ' '})    Estudiante (${formData.tipoRecurrente === 'estudiante' ? 'X' : ' '})    Administrativo (${formData.tipoRecurrente === 'administrativo' ? 'X' : ' '})`;
+      const tipoRecurrenteTexto = `Docente (${data.tipoRecurrente === 'docente' ? 'X' : ' '})    Estudiante (${data.tipoRecurrente === 'estudiante' ? 'X' : ' '})    Administrativo (${data.tipoRecurrente === 'administrativo' ? 'X' : ' '})`;
       doc.text(tipoRecurrenteTexto, margin, yPos);
       yPos += lineHeight;
 
-      doc.text(`Nombres y Apellidos: ${formData.nombresApellidos}`, margin, yPos);
+      doc.text(`Nombres y Apellidos: ${data.nombresApellidos}`, margin, yPos);
       yPos += lineHeight;
 
-      doc.text(`DNI: ${formData.dni}`, margin, yPos);
-      doc.text(`Celular: ${formData.celular}`, margin + 70, yPos);
+      doc.text(`DNI: ${data.dni}`, margin, yPos);
+      doc.text(`Celular: ${data.celular}`, margin + 70, yPos);
       yPos += lineHeight;
 
-      doc.text(`Domicilio: ${formData.domicilio}`, margin, yPos);
+      doc.text(`Domicilio: ${data.domicilio}`, margin, yPos);
       yPos += lineHeight;
 
-      doc.text(`Escuela Profesional / Dependencia: ${formData.escuelaProfesional}`, margin, yPos);
+      doc.text(`Escuela Profesional / Dependencia: ${data.escuelaProfesional}`, margin, yPos);
       yPos += lineHeight;
 
-      doc.text(`Correo electrónico: ${formData.correo}`, margin, yPos);
+      doc.text(`Correo electrónico: ${data.correo}`, margin, yPos);
       yPos += lineHeight;
 
-      doc.text(`Código UNT: ${formData.codigoUNT}`, margin, yPos);
-      doc.text(`Año/Semestre: ${formData.semestreAno}`, margin + 70, yPos);
+      doc.text(`Código UNT: ${data.codigoUNT}`, margin, yPos);
+      doc.text(`Año/Semestre: ${data.semestreAno}`, margin + 70, yPos);
       yPos += lineHeight + 5;
 
       // 2. MOTIVO
@@ -265,164 +113,127 @@ export function FormularioAnexo01() {
       yPos += lineHeight;
 
       doc.setFont('helvetica', 'normal');
-      const motivoTexto = `Denuncia (${formData.motivo === 'denuncia' ? 'X' : ' '})    Reclamo (${formData.motivo === 'reclamo' ? 'X' : ' '})    Queja (${formData.motivo === 'queja' ? 'X' : ' '})`;
+      const motivoTexto = `Denuncia (${data.motivo === 'denuncia' ? 'X' : ' '})    Reclamo (${data.motivo === 'reclamo' ? 'X' : ' '})    Queja (${data.motivo === 'queja' ? 'X' : ' '})`;
       doc.text(motivoTexto, margin, yPos);
       yPos += lineHeight;
 
-      if (formData.motivo === 'otro') {
-        doc.text(`Otro: ${formData.motivoOtro}`, margin, yPos);
+      if (data.motivo === 'otro') {
+        doc.text(`Otro: ${data.motivoOtro}`, margin, yPos);
         yPos += lineHeight;
       }
 
-      const instanciaTexto = `¿El motivo está siendo visto en otra instancia? Sí (${formData.instanciaPrevia === 'si' ? 'X' : ' '})    No (${formData.instanciaPrevia === 'no' ? 'X' : ' '})`;
+      const instanciaTexto = `¿El motivo está siendo visto en otra instancia? Sí (${data.instanciaPrevia === 'si' ? 'X' : ' '})    No (${data.instanciaPrevia === 'no' ? 'X' : ' '})`;
       doc.text(instanciaTexto, margin, yPos);
       yPos += lineHeight + 5;
 
       // 3. DESCRIPCIÓN DE HECHOS
-      if (yPos > pageHeight - 40) {
-        doc.addPage();
-        yPos = 20;
-      }
-
+      if (yPos > pageHeight - 40) { doc.addPage(); yPos = 20; }
       doc.setFont('helvetica', 'bold');
       doc.text('3. DESCRIPCIÓN DE LOS HECHOS:', margin, yPos);
       yPos += lineHeight;
-
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(10);
-      const hechosLines = doc.splitTextToSize(formData.descripcionHechos || 'N/A', pageWidth - 2 * margin);
+      const hechosLines = doc.splitTextToSize(data.descripcionHechos || 'N/A', pageWidth - 2 * margin);
       doc.text(hechosLines, margin, yPos);
       yPos += (hechosLines.length * 5) + 5;
 
       // 4. DERECHOS AFECTADOS
-      if (yPos > pageHeight - 40) {
-        doc.addPage();
-        yPos = 20;
-      }
-
+      if (yPos > pageHeight - 40) { doc.addPage(); yPos = 20; }
       doc.setFontSize(11);
       doc.setFont('helvetica', 'bold');
       doc.text('4. DERECHOS QUE CONSIDERA AFECTADOS:', margin, yPos);
       yPos += lineHeight;
-
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(10);
-      const derechosLines = doc.splitTextToSize(formData.derechosAfectados || 'N/A', pageWidth - 2 * margin);
+      const derechosLines = doc.splitTextToSize(data.derechosAfectados || 'N/A', pageWidth - 2 * margin);
       doc.text(derechosLines, margin, yPos);
       yPos += (derechosLines.length * 5) + 5;
 
       // 5. PRETENSIONES
-      if (yPos > pageHeight - 40) {
-        doc.addPage();
-        yPos = 20;
-      }
-
+      if (yPos > pageHeight - 40) { doc.addPage(); yPos = 20; }
       doc.setFontSize(11);
       doc.setFont('helvetica', 'bold');
       doc.text('5. PRETENSIONES:', margin, yPos);
       yPos += lineHeight;
-
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(10);
-      const pretensionesLines = doc.splitTextToSize(formData.pretensiones, pageWidth - 2 * margin);
+      const pretensionesLines = doc.splitTextToSize(data.pretensiones || 'N/A', pageWidth - 2 * margin);
       doc.text(pretensionesLines, margin, yPos);
       yPos += (pretensionesLines.length * 5) + 5;
 
       // 6. MEDIOS PROBATORIOS
-      if (yPos > pageHeight - 40) {
-        doc.addPage();
-        yPos = 20;
-      }
-
+      if (yPos > pageHeight - 40) { doc.addPage(); yPos = 20; }
       doc.setFontSize(11);
       doc.setFont('helvetica', 'bold');
       doc.text('6. MEDIOS PROBATORIOS:', margin, yPos);
       yPos += lineHeight;
-
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(10);
-      const mediosLines = doc.splitTextToSize(formData.mediosProbatorios || 'N/A', pageWidth - 2 * margin);
+      const mediosLines = doc.splitTextToSize(data.mediosProbatorios || 'N/A', pageWidth - 2 * margin);
       doc.text(mediosLines, margin, yPos);
       yPos += (mediosLines.length * 5) + 10;
 
       // 7. LUGAR Y FECHA
-      if (yPos > pageHeight - 60) {
-        doc.addPage();
-        yPos = 20;
-      }
-
+      if (yPos > pageHeight - 60) { doc.addPage(); yPos = 20; }
       doc.setFontSize(11);
       doc.setFont('helvetica', 'bold');
       doc.text('7. LUGAR Y FECHA:', margin, yPos);
       yPos += lineHeight;
-
       doc.setFont('helvetica', 'normal');
-      const fechaFormateada = new Date(formData.fecha).toLocaleDateString('es-PE', {
+      const fechaFormateada = new Date(data.fecha + 'T12:00:00').toLocaleDateString('es-PE', {
         day: 'numeric',
         month: 'long',
         year: 'numeric'
       });
-      doc.text(`${formData.lugar}, ${fechaFormateada}`, margin, yPos);
+      doc.text(`${data.lugar}, ${fechaFormateada}`, margin, yPos);
       yPos += lineHeight + 15;
 
       // FIRMA
-      if (formData.firmaFile) {
+      if (data.firmaFile) {
         const reader = new FileReader();
         reader.onload = (e) => {
           const imgData = e.target?.result as string;
           try {
-            // Agregar imagen de firma
-            doc.addImage(imgData, 'PNG', margin + 40, yPos, 40, 20);
+            const format = data.firmaFile.type.includes('png') ? 'PNG' : 'JPEG';
+            doc.addImage(imgData, format, margin + 40, yPos, 40, 20);
             yPos += 25;
-
-            doc.setFont('helvetica', 'normal');
-            doc.setFontSize(10);
-            doc.text('_____________________________', margin + 30, yPos);
-            yPos += 5;
-            doc.text('Firma', margin + 55, yPos);
-            yPos += 5;
-            doc.text(`DNI: ${formData.dnifirma}`, margin + 45, yPos);
-
-            // Guardar PDF
-            doc.save(`Anexo_01_${formData.nombresApellidos.replace(/\s+/g, '_')}.pdf`);
-            alert('PDF generado exitosamente');
+            finalizePDF(doc, data, margin, yPos);
           } catch (error) {
             console.error('Error al agregar firma:', error);
-            // Guardar sin firma si hay error
-            yPos += 5;
-            doc.setFont('helvetica', 'normal');
-            doc.setFontSize(10);
-            doc.text('_____________________________', margin + 30, yPos);
-            yPos += 5;
-            doc.text('Firma', margin + 55, yPos);
-            yPos += 5;
-            doc.text(`DNI: ${formData.dnifirma}`, margin + 45, yPos);
-
-            doc.save(`Anexo_01_${formData.nombresApellidos.replace(/\s+/g, '_')}.pdf`);
-            alert('PDF generado exitosamente (sin imagen de firma)');
+            yPos += 25; // Space for missing signature
+            finalizePDF(doc, data, margin, yPos);
           }
         };
-        reader.readAsDataURL(formData.firmaFile);
+        reader.readAsDataURL(data.firmaFile);
       } else {
-        // Sin firma
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
-        doc.text('_____________________________', margin + 30, yPos);
-        yPos += 5;
-        doc.text('Firma', margin + 55, yPos);
-        yPos += 5;
-        doc.text(`DNI: ${formData.dnifirma}`, margin + 45, yPos);
-
-        doc.save(`Anexo_01_${formData.nombresApellidos.replace(/\s+/g, '_')}.pdf`);
-        alert('PDF generado exitosamente');
+        // Fallback (though validation prevents this)
+        yPos += 25;
+        finalizePDF(doc, data, margin, yPos);
       }
+
     } catch (error) {
       console.error('Error al generar PDF:', error);
-      alert('Error al generar el PDF. Por favor intente nuevamente.');
+      toast.error('Error al generar el PDF. Por favor intente nuevamente.');
     }
   };
 
+  const finalizePDF = (doc: jsPDF, data: Anexo01Values, margin: number, yPos: number) => {
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.text('_____________________________', margin + 30, yPos);
+    yPos += 5;
+    doc.text('Firma', margin + 55, yPos);
+    yPos += 5;
+    doc.text(`DNI: ${data.dnifirma}`, margin + 45, yPos);
 
+    const fileName = `Anexo_01_${data.nombresApellidos.replace(/\s+/g, '_')}.pdf`;
+    doc.save(fileName);
+    toast.success('¡PDF generado exitosamente!');
+  };
+
+  const onError = () => {
+    toast.error('Por favor corrija los errores en el formulario');
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -438,71 +249,44 @@ export function FormularioAnexo01() {
           </button>
 
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Anexo N° 01
-            </h1>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              FORMULARIO
-            </h2>
-            <p className="text-lg font-semibold text-gray-800 mb-1">
-              SEÑOR DEFENSOR UNIVERSITARIO
-            </p>
-            <p className="text-md text-gray-700">
-              Universidad Nacional de Trujillo
-            </p>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Anexo N° 01</h1>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">FORMULARIO</h2>
+            <p className="text-lg font-semibold text-gray-800 mb-1">SEÑOR DEFENSOR UNIVERSITARIO</p>
+            <p className="text-md text-gray-700">Universidad Nacional de Trujillo</p>
           </div>
         </div>
 
-        <form className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit, onError)} className="space-y-6">
           {/* Datos del Recurrente */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">
-              1. DATOS PERSONALES DEL RECURRENTE
-            </h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-6">1. DATOS PERSONALES DEL RECURRENTE</h2>
 
             {/* Tipo de Recurrente */}
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Tipo de Recurrente <span className="text-red-500">*</span>
               </label>
-              <div className="flex gap-4">
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="tipoRecurrente"
-                    value="docente"
-                    checked={formData.tipoRecurrente === 'docente'}
-                    onChange={(e) => handleRadioChange('tipoRecurrente', e.target.value)}
-                    className="mr-2"
-                  />
-                  Docente
-                </label>
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="tipoRecurrente"
-                    value="estudiante"
-                    checked={formData.tipoRecurrente === 'estudiante'}
-                    onChange={(e) => handleRadioChange('tipoRecurrente', e.target.value)}
-                    className="mr-2"
-                  />
-                  Estudiante
-                </label>
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="tipoRecurrente"
-                    value="administrativo"
-                    checked={formData.tipoRecurrente === 'administrativo'}
-                    onChange={(e) => handleRadioChange('tipoRecurrente', e.target.value)}
-                    className="mr-2"
-                  />
-                  Administrativo
-                </label>
-              </div>
-              {errors.tipoRecurrente && (
-                <p className="text-red-500 text-sm mt-1">{errors.tipoRecurrente}</p>
-              )}
+              <Controller
+                name="tipoRecurrente"
+                control={control}
+                render={({ field }) => (
+                  <div className="flex gap-4">
+                    {['docente', 'estudiante', 'administrativo'].map((type) => (
+                      <label key={type} className="flex items-center capitalize">
+                        <input
+                          type="radio"
+                          {...field}
+                          value={type}
+                          checked={field.value === type}
+                          className="mr-2"
+                        />
+                        {type}
+                      </label>
+                    ))}
+                  </div>
+                )}
+              />
+              <FormError message={errors.tipoRecurrente?.message} />
             </div>
 
             {/* Nombres y Apellidos */}
@@ -512,15 +296,11 @@ export function FormularioAnexo01() {
               </label>
               <input
                 type="text"
-                name="nombresApellidos"
-                value={formData.nombresApellidos}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                {...register('nombresApellidos')}
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.nombresApellidos ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder="Ingrese nombres y apellidos completos"
               />
-              {errors.nombresApellidos && (
-                <p className="text-red-500 text-sm mt-1">{errors.nombresApellidos}</p>
-              )}
+              <FormError message={errors.nombresApellidos?.message} />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -531,63 +311,56 @@ export function FormularioAnexo01() {
                 </label>
                 <input
                   type="text"
-                  name="dni"
-                  value={formData.dni}
-                  onChange={handleChange}
                   maxLength={8}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  {...register('dni')}
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.dni ? 'border-red-500' : 'border-gray-300'}`}
                   placeholder="12345678"
                 />
-                {errors.dni && (
-                  <p className="text-red-500 text-sm mt-1">{errors.dni}</p>
-                )}
+                <FormError message={errors.dni?.message} />
               </div>
 
               {/* Celular */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Celular
+                  Celular <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="tel"
-                  name="celular"
-                  value={formData.celular}
-                  onChange={handleChange}
                   maxLength={9}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  {...register('celular')}
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.celular ? 'border-red-500' : 'border-gray-300'}`}
                   placeholder="987654321"
                 />
+                <FormError message={errors.celular?.message} />
               </div>
             </div>
 
             {/* Domicilio */}
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Domicilio *
+                Domicilio <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
-                name="domicilio"
-                value={formData.domicilio}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                {...register('domicilio')}
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.domicilio ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder="Dirección completa"
               />
+              <FormError message={errors.domicilio?.message} />
             </div>
 
             {/* Escuela Profesional */}
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Escuela Profesional / Dependencia Administrativa *
+                Escuela Profesional / Dependencia Administrativa <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
-                name="escuelaProfesional"
-                value={formData.escuelaProfesional}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                {...register('escuelaProfesional')}
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.escuelaProfesional ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder="Ej: Ingeniería de Sistemas"
               />
+              <FormError message={errors.escuelaProfesional?.message} />
             </div>
 
             {/* Correo */}
@@ -597,15 +370,11 @@ export function FormularioAnexo01() {
               </label>
               <input
                 type="email"
-                name="correo"
-                value={formData.correo}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                {...register('correo')}
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.correo ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder="ejemplo@unt.edu.pe"
               />
-              {errors.correo && (
-                <p className="text-red-500 text-sm mt-1">{errors.correo}</p>
-              )}
+              <FormError message={errors.correo?.message} />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -616,15 +385,11 @@ export function FormularioAnexo01() {
                 </label>
                 <input
                   type="text"
-                  name="codigoUNT"
-                  value={formData.codigoUNT}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  {...register('codigoUNT')}
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.codigoUNT ? 'border-red-500' : 'border-gray-300'}`}
                   placeholder="Ingrese Código UNT"
                 />
-                {errors.codigoUNT && (
-                  <p className="text-red-500 text-sm mt-1">{errors.codigoUNT}</p>
-                )}
+                <FormError message={errors.codigoUNT?.message} />
               </div>
 
               {/* Año/Semestre */}
@@ -634,15 +399,11 @@ export function FormularioAnexo01() {
                 </label>
                 <input
                   type="text"
-                  name="semestreAno"
-                  value={formData.semestreAno}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  {...register('semestreAno')}
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.semestreAno ? 'border-red-500' : 'border-gray-300'}`}
                   placeholder="Ej: 2024-I"
                 />
-                {errors.semestreAno && (
-                  <p className="text-red-500 text-sm mt-1">{errors.semestreAno}</p>
-                )}
+                <FormError message={errors.semestreAno?.message} />
               </div>
             </div>
           </section>
@@ -655,258 +416,176 @@ export function FormularioAnexo01() {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Tipo de Motivo <span className="text-red-500">*</span>
               </label>
-              <div className="flex flex-wrap gap-4">
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="motivo"
-                    value="denuncia"
-                    checked={formData.motivo === 'denuncia'}
-                    onChange={(e) => handleRadioChange('motivo', e.target.value)}
-                    className="mr-2"
-                  />
-                  Denuncia
-                </label>
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="motivo"
-                    value="reclamo"
-                    checked={formData.motivo === 'reclamo'}
-                    onChange={(e) => handleRadioChange('motivo', e.target.value)}
-                    className="mr-2"
-                  />
-                  Reclamo
-                </label>
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="motivo"
-                    value="queja"
-                    checked={formData.motivo === 'queja'}
-                    onChange={(e) => handleRadioChange('motivo', e.target.value)}
-                    className="mr-2"
-                  />
-                  Queja
-                </label>
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="motivo"
-                    value="otro"
-                    checked={formData.motivo === 'otro'}
-                    onChange={(e) => handleRadioChange('motivo', e.target.value)}
-                    className="mr-2"
-                  />
-                  Otro
-                </label>
-              </div>
-              {errors.motivo && (
-                <p className="text-red-500 text-sm mt-1">{errors.motivo}</p>
-              )}
+              <Controller
+                name="motivo"
+                control={control}
+                render={({ field }) => (
+                  <div className="flex flex-wrap gap-4">
+                    {['denuncia', 'reclamo', 'queja', 'otro'].map((type) => (
+                      <label key={type} className="flex items-center capitalize">
+                        <input
+                          type="radio"
+                          {...field}
+                          value={type}
+                          checked={field.value === type}
+                          className="mr-2"
+                        />
+                        {type}
+                      </label>
+                    ))}
+                  </div>
+                )}
+              />
+              <FormError message={errors.motivo?.message} />
             </div>
 
-            {formData.motivo === 'otro' && (
+            {motivo === 'otro' && (
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Especifique el Motivo <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
-                  name="motivoOtro"
-                  value={formData.motivoOtro}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  {...register('motivoOtro')}
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.motivoOtro ? 'border-red-500' : 'border-gray-300'}`}
                   placeholder="Especifique otro motivo"
                 />
-                {errors.motivoOtro && (
-                  <p className="text-red-500 text-sm mt-1">{errors.motivoOtro}</p>
-                )}
+                <FormError message={errors.motivoOtro?.message} />
               </div>
             )}
 
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                ¿El motivo está siendo visto en otra instancia interna o externa?
+                ¿El motivo está siendo visto en otra instancia interna o externa? *
               </label>
-              <div className="flex gap-4">
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="instanciaPrevia"
-                    value="si"
-                    checked={formData.instanciaPrevia === 'si'}
-                    onChange={(e) => handleRadioChange('instanciaPrevia', e.target.value)}
-                    className="mr-2"
-                  />
-                  Sí
-                </label>
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="instanciaPrevia"
-                    value="no"
-                    checked={formData.instanciaPrevia === 'no'}
-                    onChange={(e) => handleRadioChange('instanciaPrevia', e.target.value)}
-                    className="mr-2"
-                  />
-                  No
-                </label>
-              </div>
+              <Controller
+                name="instanciaPrevia"
+                control={control}
+                render={({ field }) => (
+                  <div className="flex gap-4">
+                    <label className="flex items-center">
+                      <input type="radio" {...field} value="si" checked={field.value === 'si'} className="mr-2" />
+                      Sí
+                    </label>
+                    <label className="flex items-center">
+                      <input type="radio" {...field} value="no" checked={field.value === 'no'} className="mr-2" />
+                      No
+                    </label>
+                  </div>
+                )}
+              />
             </div>
-
           </section>
 
           {/* Descripción de Hechos */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">
-              3. DESCRIPCIÓN DE LOS HECHOS
-            </h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-6">3. DESCRIPCIÓN DE LOS HECHOS</h2>
             <p className="text-sm text-gray-600 mb-4">
               Debe describirse con suficiente claridad el hecho o hechos que originan la solicitud; datos y cargo del denunciado, lugar, fecha, así como el motivo y alcance de la pretensión que se plantea, de corresponder (obligatorio).
             </p>
-            <div>
-              <textarea
-                name="descripcionHechos"
-                value={formData.descripcionHechos}
-                onChange={handleChange}
-                rows={8}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Describa los hechos de manera clara y detallada..."
-              />
-              {errors.descripcionHechos && (
-                <p className="text-red-500 text-sm mt-1">{errors.descripcionHechos}</p>
-              )}
-            </div>
+            <textarea
+              {...register('descripcionHechos')}
+              rows={8}
+              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.descripcionHechos ? 'border-red-500' : 'border-gray-300'}`}
+              placeholder="Describa los hechos de manera clara y detallada..."
+            />
+            <FormError message={errors.descripcionHechos?.message} />
           </section>
 
           {/* Derechos Afectados */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">
-              4. DERECHOS QUE CONSIDERA AFECTADOS
-            </h2>
-            <div>
-              <textarea
-                name="derechosAfectados"
-                value={formData.derechosAfectados}
-                onChange={handleChange}
-                rows={5}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Indique qué derechos considera que han sido afectados..."
-              />
-            </div>
+            <h2 className="text-xl font-bold text-gray-900 mb-6">4. DERECHOS QUE CONSIDERA AFECTADOS</h2>
+            <textarea
+              {...register('derechosAfectados')}
+              rows={5}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Indique qué derechos considera que han sido afectados..."
+            />
           </section>
 
           {/* Pretensiones */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">
-              5. PRETENSIONES
-            </h2>
-            <div>
-              <textarea
-                name="pretensiones"
-                value={formData.pretensiones}
-                onChange={handleChange}
-                rows={5}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Describa claramente lo que solicita a la Defensoría Universitaria..."
-              />
-              {errors.pretensiones && (
-                <p className="text-red-500 text-sm mt-1">{errors.pretensiones}</p>
-              )}
-            </div>
+            <h2 className="text-xl font-bold text-gray-900 mb-6">5. PRETENSIONES</h2>
+            <textarea
+              {...register('pretensiones')}
+              rows={5}
+              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.pretensiones ? 'border-red-500' : 'border-gray-300'}`}
+              placeholder="Describa claramente lo que solicita a la Defensoría Universitaria..."
+            />
+            <FormError message={errors.pretensiones?.message} />
           </section>
 
           {/* Medios Probatorios */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">
-              6. MEDIOS PROBATORIOS
-            </h2>
-            <p className="text-sm text-gray-600 mb-4">
-              Evidencias y/o datos de testigos
-            </p>
-            <div>
-              <textarea
-                name="mediosProbatorios"
-                value={formData.mediosProbatorios}
-                onChange={handleChange}
-                rows={5}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Liste las evidencias documentales, testigos u otros medios probatorios..."
-              />
-            </div>
+            <h2 className="text-xl font-bold text-gray-900 mb-6">6. MEDIOS PROBATORIOS</h2>
+            <p className="text-sm text-gray-600 mb-4">Evidencias y/o datos de testigos</p>
+            <textarea
+              {...register('mediosProbatorios')}
+              rows={5}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Liste las evidencias documentales, testigos u otros medios probatorios..."
+            />
           </section>
 
           {/* Lugar y Fecha */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">
-              7. LUGAR Y FECHA
-            </h2>
-
+            <h2 className="text-xl font-bold text-gray-900 mb-6">7. LUGAR Y FECHA</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Lugar *
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Lugar *</label>
                 <input
                   type="text"
-                  name="lugar"
-                  value={formData.lugar}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  {...register('lugar')}
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.lugar ? 'border-red-500' : 'border-gray-300'}`}
                   placeholder="Trujillo"
                 />
+                <FormError message={errors.lugar?.message} />
               </div>
-
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Fecha *
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Fecha *</label>
                 <input
                   type="date"
-                  name="fecha"
-                  value={formData.fecha}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  {...register('fecha')}
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.fecha ? 'border-red-500' : 'border-gray-300'}`}
                 />
+                <FormError message={errors.fecha?.message} />
               </div>
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                DNI (para firma) <span className="text-red-500">*</span>
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">DNI (para firma) <span className="text-red-500">*</span></label>
               <input
                 type="text"
-                name="dnifirma"
-                value={formData.dnifirma}
-                onChange={handleChange}
                 maxLength={8}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                {...register('dnifirma')}
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.dnifirma ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder="12345678"
               />
-              {errors.dnifirma && (
-                <p className="text-red-500 text-sm mt-1">{errors.dnifirma}</p>
-              )}
+              <FormError message={errors.dnifirma?.message} />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Firma (PNG o JPG) <span className="text-red-500">*</span>
-              </label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                {!formData.firmaFile ? (
+              <label className="block text-sm font-medium text-gray-700 mb-2">Firma (PNG o JPG) <span className="text-red-500">*</span></label>
+              <div className={`border-2 border-dashed rounded-lg p-6 text-center ${errors.firmaFile ? 'border-red-300 bg-red-50' : 'border-gray-300'}`}>
+                {!firmaFile ? (
                   <div>
                     <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                     <label className="cursor-pointer">
-                      <span className="text-blue-600 hover:text-blue-700 font-medium">
-                        Seleccionar archivo
-                      </span>
-                      <input
-                        type="file"
-                        accept=".png,.jpg,.jpeg"
-                        onChange={handleFileUpload}
-                        className="hidden"
+                      <span className="text-blue-600 hover:text-blue-700 font-medium">Seleccionar archivo</span>
+                      <Controller
+                        name="firmaFile"
+                        control={control}
+                        render={({ field }) => (
+                          <input
+                            type="file"
+                            accept=".png,.jpg,.jpeg"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) field.onChange(file);
+                            }}
+                            className="hidden"
+                          />
+                        )}
                       />
                     </label>
                     <p className="text-sm text-gray-500 mt-2">PNG o JPG (máx. 5MB)</p>
@@ -916,15 +595,13 @@ export function FormularioAnexo01() {
                     <div className="flex items-center space-x-3">
                       <FileText className="w-8 h-8 text-blue-600" />
                       <div className="text-left">
-                        <p className="font-medium text-gray-900">{formData.firmaFile.name}</p>
-                        <p className="text-sm text-gray-500">
-                          {(formData.firmaFile.size / 1024).toFixed(2)} KB
-                        </p>
+                        <p className="font-medium text-gray-900">{firmaFile.name}</p>
+                        <p className="text-sm text-gray-500">{(firmaFile.size / 1024).toFixed(2)} KB</p>
                       </div>
                     </div>
                     <button
                       type="button"
-                      onClick={() => setFormData(prev => ({ ...prev, firmaFile: null }))}
+                      onClick={() => setValue('firmaFile', undefined)}
                       className="text-red-600 hover:text-red-700"
                     >
                       <X className="w-5 h-5" />
@@ -932,9 +609,7 @@ export function FormularioAnexo01() {
                   </div>
                 )}
               </div>
-              {errors.firmaFile && (
-                <p className="text-red-500 text-sm mt-1">{errors.firmaFile}</p>
-              )}
+              <FormError message={errors.firmaFile?.message as string} />
             </div>
           </section>
 
@@ -942,17 +617,13 @@ export function FormularioAnexo01() {
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex flex-col sm:flex-row gap-4">
               <button
-                type="button"
-                onClick={handleGeneratePDF}
+                type="submit"
                 className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2 font-medium"
               >
                 <Download className="w-5 h-5" />
-                <span>Descargar en PDF</span>
+                <span>Generar PDF</span>
               </button>
-
-
             </div>
-
             <p className="text-sm text-gray-500 text-center mt-4">
               Una vez generado el documento, revíselo antes de presentarlo oficialmente
             </p>
