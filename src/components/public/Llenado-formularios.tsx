@@ -15,7 +15,7 @@ export function LlenadoFormularios() {
       color2: 'bg-green-600',
       hoverColor: 'hover:bg-blue-700',
       hoverColor2: 'hover:bg-green-700',
-      route: '/llenado-formularios/formulario-anexo-01', // Ruta vacía para que la agregues
+      route: '/llenado-formularios/formulario-anexo-01',
       pdfUrl: '/docs/Anexo 01.pdf'
     }
   ];
@@ -109,7 +109,7 @@ export function LlenadoFormularios() {
                   </li>
                   <li className="flex items-start">
                     <span className="text-blue-600 mr-2 font-bold">•</span>
-                    <span>Asegúrese de tener su firma digital en formato PNG, JPG o PDF</span>
+                    <span>Asegúrese de tener su firma digital en formato PNG o JPG</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-blue-600 mr-2 font-bold">•</span>
@@ -144,7 +144,6 @@ export function LlenadoFormularios() {
                 mesadepartes_defensoria@unitru.edu.pe
               </a>
             </div>
-
           </div>
         </div>
       </div>

@@ -68,10 +68,34 @@ export function FormularioAnexo01() {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  const validateInput = (name: string, value: string) => {
+    switch (name) {
+      case 'nombresApellidos':
+      case 'lugar':
+        // Only letters and spaces
+        if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/.test(value)) return false;
+        break;
+      case 'dni':
+      case 'dnifirma':
+      case 'codigoUNT':
+        // Only numbers, max length handled by maxLength prop but good to check
+        if (!/^\d*$/.test(value)) return false;
+        break;
+      case 'celular':
+        if (!/^\d*$/.test(value)) return false;
+        break;
+    }
+    return true;
+  };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
+
+    // Strict Input Validation
+    if (!validateInput(name, value)) return;
+
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -96,8 +120,8 @@ export function FormularioAnexo01() {
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Validar que sea PNG o PDF
-      if (file.type === 'image/png' || file.type === 'application/pdf') {
+      // Validar que sea PNG o JPG
+      if (file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg') {
         setFormData(prev => ({
           ...prev,
           firmaFile: file
@@ -110,7 +134,7 @@ export function FormularioAnexo01() {
       } else {
         setErrors(prev => ({
           ...prev,
-          firmaFile: 'Solo se permiten archivos PNG o PDF'
+          firmaFile: 'Solo se permiten archivos PNG o JPG'
         }));
       }
     }
@@ -118,21 +142,54 @@ export function FormularioAnexo01() {
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!formData.tipoRecurrente) newErrors.tipoRecurrente = 'Seleccione el tipo de recurrente';
-    if (!formData.nombresApellidos) newErrors.nombresApellidos = 'Ingrese nombres y apellidos';
-    if (!formData.dni) newErrors.dni = 'Ingrese DNI';
-    if (!formData.correo) newErrors.correo = 'Ingrese correo electrónico';
+
+    if (!formData.nombresApellidos.trim()) newErrors.nombresApellidos = 'Ingrese nombres y apellidos';
+
+    if (!formData.dni) {
+      newErrors.dni = 'Ingrese DNI';
+    } else if (formData.dni.length !== 8) {
+      newErrors.dni = 'El DNI debe tener 8 dígitos';
+    }
+
+    if (!formData.celular) {
+      newErrors.celular = 'Ingrese celular';
+    } else if (formData.celular.length !== 9) {
+      newErrors.celular = 'El celular debe tener 9 dígitos';
+    }
+
+    if (!formData.domicilio.trim()) newErrors.domicilio = 'Ingrese domicilio';
+
+    if (!formData.escuelaProfesional.trim()) newErrors.escuelaProfesional = 'Ingrese Escuela Profesional / Dependencia';
+
+    if (!formData.correo) {
+      newErrors.correo = 'Ingrese correo electrónico';
+    } else if (!emailRegex.test(formData.correo)) {
+      newErrors.correo = 'Ingrese un correo electrónico válido';
+    }
+
     if (!formData.codigoUNT) newErrors.codigoUNT = 'Ingrese Código UNT';
-    if (!formData.semestreAno) newErrors.semestreAno = 'Ingrese Semestre/Año';
+    if (!formData.semestreAno) newErrors.semestreAno = 'Ingrese Año/Semestre';
+
     if (!formData.motivo) newErrors.motivo = 'Seleccione el motivo';
-    if (formData.motivo === 'otro' && !formData.motivoOtro) {
+    if (formData.motivo === 'otro' && !formData.motivoOtro.trim()) {
       newErrors.motivoOtro = 'Especifique el motivo';
     }
-    if (!formData.descripcionHechos) newErrors.descripcionHechos = 'Ingrese la descripción de los hechos';
-    if (!formData.pretensiones) newErrors.pretensiones = 'Ingrese las pretensiones';
-    if (!formData.firmaFile) newErrors.firmaFile = 'Suba su firma';
-    if (!formData.dnifirma) newErrors.dnifirma = 'Ingrese DNI de la firma';
+
+    if (!formData.descripcionHechos.trim()) newErrors.descripcionHechos = 'Ingrese la descripción de los hechos obligatoriamente';
+
+    if (!formData.lugar.trim()) newErrors.lugar = 'Ingrese el lugar';
+    if (!formData.fecha) newErrors.fecha = 'Ingrese la fecha';
+
+    if (!formData.firmaFile) newErrors.firmaFile = 'Suba su firma (PNG o JPG)';
+
+    if (!formData.dnifirma) {
+      newErrors.dnifirma = 'Ingrese DNI de la firma';
+    } else if (formData.dnifirma !== formData.dni) {
+      newErrors.dnifirma = 'El DNI de la firma debe coincidir con el DNI del solicitante';
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -199,7 +256,7 @@ export function FormularioAnexo01() {
       yPos += lineHeight;
 
       doc.text(`Código UNT: ${formData.codigoUNT}`, margin, yPos);
-      doc.text(`Semestre/Año: ${formData.semestreAno}`, margin + 70, yPos);
+      doc.text(`Año/Semestre: ${formData.semestreAno}`, margin + 70, yPos);
       yPos += lineHeight + 5;
 
       // 2. MOTIVO
@@ -365,15 +422,7 @@ export function FormularioAnexo01() {
     }
   };
 
-  const handleGenerateWord = () => {
-    if (validateForm()) {
-      // TODO: Implementar generación de Word
-      alert('Generando documento Word con tus datos...');
-      console.log('Datos del formulario:', formData);
-    } else {
-      alert('Por favor complete todos los campos obligatorios');
-    }
-  };
+
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -408,7 +457,7 @@ export function FormularioAnexo01() {
           {/* Datos del Recurrente */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-bold text-gray-900 mb-6">
-              1. Datos Personales del Recurrente
+              1. DATOS PERSONALES DEL RECURRENTE
             </h2>
 
             {/* Tipo de Recurrente */}
@@ -514,7 +563,7 @@ export function FormularioAnexo01() {
             {/* Domicilio */}
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Domicilio
+                Domicilio *
               </label>
               <input
                 type="text"
@@ -529,7 +578,7 @@ export function FormularioAnexo01() {
             {/* Escuela Profesional */}
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Escuela Profesional / Dependencia Administrativa
+                Escuela Profesional / Dependencia Administrativa *
               </label>
               <input
                 type="text"
@@ -578,10 +627,10 @@ export function FormularioAnexo01() {
                 )}
               </div>
 
-              {/* Semestre/Año */}
+              {/* Año/Semestre */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Semestre/Año <span className="text-red-500">*</span>
+                  Año/Semestre <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -600,7 +649,7 @@ export function FormularioAnexo01() {
 
           {/* Motivo */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">2. Motivo</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-6">2. MOTIVO</h2>
 
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -714,7 +763,7 @@ export function FormularioAnexo01() {
               3. DESCRIPCIÓN DE LOS HECHOS
             </h2>
             <p className="text-sm text-gray-600 mb-4">
-              Debe describirse con suficiente claridad el hecho o hechos que originan la solicitud; datos y cargo del denunciado, lugar, fecha, así como el motivo y alcance de la pretensión que se plantea, de corresponder.
+              Debe describirse con suficiente claridad el hecho o hechos que originan la solicitud; datos y cargo del denunciado, lugar, fecha, así como el motivo y alcance de la pretensión que se plantea, de corresponder (obligatorio).
             </p>
             <div>
               <textarea
@@ -797,7 +846,7 @@ export function FormularioAnexo01() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Lugar
+                  Lugar *
                 </label>
                 <input
                   type="text"
@@ -811,7 +860,7 @@ export function FormularioAnexo01() {
 
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Fecha
+                  Fecha *
                 </label>
                 <input
                   type="date"
@@ -843,7 +892,7 @@ export function FormularioAnexo01() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Firma (PNG o PDF) <span className="text-red-500">*</span>
+                Firma (PNG o JPG) <span className="text-red-500">*</span>
               </label>
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                 {!formData.firmaFile ? (
@@ -855,12 +904,12 @@ export function FormularioAnexo01() {
                       </span>
                       <input
                         type="file"
-                        accept=".png,.pdf"
+                        accept=".png,.jpg,.jpeg"
                         onChange={handleFileUpload}
                         className="hidden"
                       />
                     </label>
-                    <p className="text-sm text-gray-500 mt-2">PNG o PDF (máx. 5MB)</p>
+                    <p className="text-sm text-gray-500 mt-2">PNG o JPG (máx. 5MB)</p>
                   </div>
                 ) : (
                   <div className="flex items-center justify-between">
@@ -901,14 +950,7 @@ export function FormularioAnexo01() {
                 <span>Descargar en PDF</span>
               </button>
 
-              {/*<button
-                type="button"
-                onClick={handleGenerateWord}
-                className="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center space-x-2 font-medium"
-              >
-                <Download className="w-5 h-5" />
-                <span>Descargar en Word</span>
-              </button>*/}
+
             </div>
 
             <p className="text-sm text-gray-500 text-center mt-4">

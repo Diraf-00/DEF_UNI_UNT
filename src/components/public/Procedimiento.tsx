@@ -18,7 +18,6 @@ export function Procedimiento() {
     { titulo: 'Admisibilidad', descripcion: 'Evaluación dentro de 5 días hábiles; si no cumple requisitos se solicita subsanación o se archiva (Art. 23).' },
     { titulo: 'Investigación', descripcion: 'Plazo máximo: 30 días calendario (Art. 18).' },
     { titulo: 'Conciliación', descripcion: 'Se cita a las partes para lograr acuerdo. Si hay acuerdo, se levanta Acta de Mediación; de lo contrario, se emite un informe final con las recomendaciones pertinentes (Anexo 2).' },
-    //{ titulo: 'Recomendaciones', descripcion: 'Si no hay acuerdo, se emiten recomendaciones (no vinculantes).' },
     { titulo: 'Informe final', descripcion: 'Incluye hechos, análisis, medidas y cumplimiento; se entrega a las partes y al Rectorado (Art. 28).' },
   ];
 
