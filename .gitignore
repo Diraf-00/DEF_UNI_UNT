@@ -1,3 +1,18 @@
-node_modules
+# Dependencias de Node (¡pesan muchísimo y no se suben a Git!)
+node_modules/
+
+# Archivos de configuración local y claves secretas
 .env
-node_modules
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Archivos de reportes de errores (Logs)
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos temporales del sistema operativo (basura)
+.DS_Store
+Thumbs.db
