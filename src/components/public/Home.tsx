@@ -23,17 +23,7 @@ export function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col" style={{ maxWidth: "1050px", margin: "0 auto", width: "100%" }}>
-      {/* Banner superior */}
-      <section>
-        <div style={{ maxWidth: "1050px", margin: "0 auto", width: "100%" }}>
-          <img
-            src="/images/banner-defensoria.webp"
-            alt="Banner Defensoría Universitaria"
-            className="w-full h-44 md:h-64 lg:h-80 object-cover"
-            style={{ display: "block", width: "100%", maxWidth: "1050px", margin: "0 auto" }}
-          />
-        </div>
-      </section>
+
 
       {/* CAMBIO 1: Añadido 'max-w-6xl' para limitar el ancho máximo
         del contenido y evitar que se "estire" en pantallas grandes.
