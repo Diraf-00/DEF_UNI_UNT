@@ -10,8 +10,6 @@ export function Home() {
     warmYellow: "#FFBC59",
   };
 
-  const quienessomos = `La Defensoría Universitaria es un órgano autónomo e independiente de los órganos de gobierno, encargado de tutelar los derechos de los miembros de la comunidad universitaria, garantizando el principio de autoridad responsable. Su labor se orienta a la conciliación y mediación, promoviendo la armonía y el respeto dentro de la Universidad Nacional de Trujillo.`;
-
   const autoridades = {
     nombre: "Dra. Vilma Méndez Gil",
     cargo: "Defensora Universitaria",
@@ -44,19 +42,40 @@ export function Home() {
         <section
           className="p-6 md:p-8 rounded-2xl shadow-lg"
           style={{
-            backgroundColor: colors.paper,
+            backgroundColor: "#ffffffff",
           }}
         >
-          <div className="flex flex-col md:flex-row items-center gap-6">
-            <div>
+          {/* Modificado: Se añade un grid responsivo (1 columna en móvil, 2 en pantallas medianas) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+
+            {/* Columna Izquierda: Texto */}
+            <div className="space-y-4">
               <h2
                 className="section-title"
-                style={{ color: colors.darkBlue, fontSize: "1.5rem" }}
+                style={{ color: colors.darkBlue, fontSize: "3rem", marginBottom: "0" }}
               >
                 ¿Quiénes somos?
               </h2>
-              <p className="text-gray-700 leading-relaxed">{quienessomos}</p>
+              <p className="text-gray-700 leading-relaxed">
+                La Defensoría Universitaria es un órgano <strong>autónomo e independiente</strong> de los órganos de gobierno,
+                encargado de tutelar los derechos y velar por los intereses de los <strong>estudiantes, docentes y administrativos</strong>,
+                garantizando el principio de autoridad responsable
+                <br />
+                <br />
+                Su labor se orienta a la <strong>conciliación y mediación</strong>, promoviendo la armonía y
+                el respeto dentro de la Universidad Nacional de Trujillo.
+              </p>
             </div>
+
+            {/* Columna Derecha: Nueva Imagen */}
+            <div className="flex justify-center w-full">
+              <img
+                src="/images/quienes_somos.png"
+                alt="¿Quiénes somos? - Defensoria Universitaria"
+                className="w-full h-full object-cover min-h-[250px] md:min-h-[250px] mix-blend-multiply"
+              />
+            </div>
+
           </div>
         </section>
 
